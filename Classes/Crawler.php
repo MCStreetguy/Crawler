@@ -12,6 +12,9 @@
 
 namespace MCStreetguy\Crawler;
 
+use MCStreetguy\Crawler\Config\CrawlConfigurationInterface;
+use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
+
 /**
  * The main class of the web-crawler.
  *
@@ -23,4 +26,34 @@ namespace MCStreetguy\Crawler;
  */
 class Crawler
 {
+    /**
+     * The crawler configuration object.
+     * @var CrawlConfigurationInterface
+     */
+    protected $configuration;
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param CrawlConfigurationInterface $config The configuration object to use for the crawler
+     * @return void
+     */
+    public function __construct(CrawlConfigurationInterface $config = null)
+    {
+        if ($config === null) {
+            $config = new DefaultCrawlConfiguration;
+        }
+
+        $this->configuration = $config;
+    }
+
+    /**
+     * Get the crawler configuration object.
+     *
+     * @return CrawlConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
 }

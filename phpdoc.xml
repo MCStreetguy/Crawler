@@ -17,7 +17,16 @@
         <target>Docs/Api</target>
     </transformer>
     <transformations>
-        <template name="responsive" />
+        <!-- <template name="checkstyle" /> -->
+        <!-- <template name="clean" /> -->
+        <!-- <template name="new-black" /> -->
+        <!-- <template name="old-ocean" /> -->
+        <!-- <template name="responsive" /> -->
+        <!-- <template name="responsive-twig" /> -->
+        <!-- <template name="xml" /> -->
+        <!-- <template name="zend" /> -->
+
+        <template name="responsive-twig" />
     </transformations>
     <files>
         <directory>Classes</directory>

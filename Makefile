@@ -1,13 +1,14 @@
 default:
-	echo "Please specify a task!" && exit
+	@echo "Please specify a task!" && exit
 
 update:
-	composer update -o
+	@composer update -o
 
 build-docs: ensure-dependencies
-	./vendor/bin/phpdoc -c "./phpdoc.xml"
+	@rm -rf Docs/Api
+	@./vendor/bin/phpdoc -c "./phpdoc.xml"
 
 ensure-dependencies: composer.lock
 	
 composer.lock:
-	composer install -o
+	@composer install -o
