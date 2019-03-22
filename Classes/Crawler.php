@@ -27,8 +27,12 @@ use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
 class Crawler
 {
     /**
-     * The crawler configuration object.
-     * @var CrawlConfigurationInterface
+     * @var string The base target to crawl.
+     */
+    protected $baseTarget;
+
+    /**
+     * @var CrawlConfigurationInterface The crawler configuration object.
      */
     protected $configuration;
 
@@ -55,5 +59,15 @@ class Crawler
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    /**
+     * Get the base target to crawl.
+     *
+     * @return string
+     */
+    public function getBaseTarget()
+    {
+        return $this->baseTarget;
     }
 }

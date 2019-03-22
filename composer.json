@@ -7,7 +7,8 @@
     "minimum-stability": "dev",
     "readme": "./README.md",
     "require": {
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/psr7": "^1.5"
     },
     "require-dev": {
         "kint-php/kint": "^3.2",
