@@ -1,0 +1,31 @@
+{
+    "name": "mcstreetguy/crawler",
+    "description": "An advanced web-crawler written in PHP.",
+    "type": "library",
+    "license": "MIT",
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "readme": "./README.md",
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "kint-php/kint": "^3.2"
+    },
+    "suggest": {
+        "ext-curl": "For improved network requests, replaces stream handler usage."
+    },
+    "authors": [
+        {
+            "name": "Maximilian Schmidt",
+            "email": "maximilianschmidt404@gmail.com",
+            "homepage": "https://www.mcstreetguy.de/",
+            "role": "Lead-Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MCStreetguy\\Crawler\\": "Classes/"
+        }
+    }
+}
