@@ -15,6 +15,7 @@ namespace MCStreetguy\Crawler\Result;
 use Webmozart\Assert\Assert;
 use Tree\Builder\NodeBuilder;
 use Tree\Node\NodeInterface;
+use Tree\Node\Node;
 
 /**
  * A set of CrawlResult objects.
@@ -53,6 +54,7 @@ class ResultSet implements \Iterator
      * Returns the current element.
      *
      * @return CrawlResult
+     * @link http://php.net/manual/en/iterator.current.php
      */
     public function current()
     {
@@ -63,6 +65,7 @@ class ResultSet implements \Iterator
      * Returns the key of the current element.
      *
      * @return int
+     * @link http://php.net/manual/en/iterator.key.php
      */
     public function key()
     {
@@ -73,6 +76,7 @@ class ResultSet implements \Iterator
      * Moves the current position to the next element.
      *
      * @return void
+     * @link http://php.net/manual/en/iterator.next.php
      */
     public function next()
     {
@@ -83,6 +87,7 @@ class ResultSet implements \Iterator
      * Rewinds back to the first element of the Iterator.
      *
      * @return void
+     * @link http://php.net/manual/en/iterator.rewind.php
      */
     public function rewind()
     {
@@ -93,6 +98,7 @@ class ResultSet implements \Iterator
      * Checks if current position is valid.
      *
      * @return bool
+     * @link http://php.net/manual/en/iterator.valid.php
      */
     public function valid()
     {
@@ -109,10 +115,11 @@ class ResultSet implements \Iterator
         $contents = clone $this->contents;
         $rootResult = array_filter($contents, function ($elem) {
             return ($elem->getFoundOn() === null);
-        });
+        })[0];
 
-        $tree = new NodeBuilder();
+        $rootNode = new Node($rootResult->getUri());
+        // $tree = new NodeBuilder($rootNode);
 
-        return $tree->getNode();
+        return $rootNode;
     }
 }
