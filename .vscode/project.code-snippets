@@ -22,7 +22,7 @@
 		"body": [
 			"",
 			"/**",
-			" * ${1:File description}",
+			" * This file is part of the mcstreetguy/crawler package.",
 			" *",
 			" * @package    mcstreetguy/crawler",
 			" * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>",
@@ -32,10 +32,6 @@
 			" */",
 			"",
 			"namespace MCStreetguy\\Crawler${2:\\\\};",
-			"",
-			"/*",
-			" * This file is part of the mcstreetguy/crawler package.",
-			" */",
 			"",
 			"$0"
 		]
@@ -54,7 +50,7 @@
 			" * @package    mcstreetguy/crawler",
 			" * @since      ${7:always}",
 			" */",
-			"class ${1:Class} ${2:extends ${3:AbstractClass}} {4:implements ${5:Interface}}",
+			"class ${1:Class} ${2:extends ${3:AbstractClass}} ${4:implements ${5:Interface}}",
 			"{",
 			"    $0",
 			"}"

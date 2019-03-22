@@ -39,7 +39,7 @@ interface CrawlConfigurationInterface
      *
      * @return int
      */
-    public function getMaximumResponseSize(): int;
+    public function getMaximumResponseSize(): float;
 
     /**
      * Get the maximum depth.
