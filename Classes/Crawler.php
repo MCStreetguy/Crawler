@@ -14,6 +14,7 @@ namespace MCStreetguy\Crawler;
 
 use MCStreetguy\Crawler\Config\CrawlConfigurationInterface;
 use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
+use Psr\Http\Message\UriInterface;
 
 /**
  * The main class of the web-crawler.
@@ -26,14 +27,10 @@ use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
  */
 class Crawler
 {
-    /**
-     * @var string The base target to crawl.
-     */
-    protected $baseTarget;
+    /** @var UriInterface The target url to crawl. */
+    protected $target;
 
-    /**
-     * @var CrawlConfigurationInterface The crawler configuration object.
-     */
+    /** @var CrawlConfigurationInterface The crawler configuration object. */
     protected $configuration;
 
     /**
@@ -52,6 +49,16 @@ class Crawler
     }
 
     /**
+     * Get the target url to crawl.
+     *
+     * @return UriInterface
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
      * Get the crawler configuration object.
      *
      * @return CrawlConfigurationInterface
@@ -59,15 +66,5 @@ class Crawler
     public function getConfiguration()
     {
         return $this->configuration;
-    }
-
-    /**
-     * Get the base target to crawl.
-     *
-     * @return string
-     */
-    public function getBaseTarget()
-    {
-        return $this->baseTarget;
     }
 }
