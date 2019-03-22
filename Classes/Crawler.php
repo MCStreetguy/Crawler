@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file contains the main crawler class.
+ * This file is part of the mcstreetguy/crawler package.
  *
  * @package    mcstreetguy/crawler
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
@@ -12,13 +12,14 @@
 
 namespace MCStreetguy\Crawler;
 
-/*
- * This file is part of the mcstreetguy/crawler package.
- */
-
 /**
  * The main class of the web-crawler.
- * This is the entry point to every usage of this library.
+ *
+ * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
+ * @copyright  2019, Maximilian Schmidt
+ * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
+ * @package    mcstreetguy/crawler
+ * @since      always
  */
 class Crawler
 {

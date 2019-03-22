@@ -15,7 +15,7 @@
 	// 	],
 	// 	"description": "Log output to console"
 	// }
-	"PHP File": {
+	"PHP File (crawler)": {
 		"scope": "php",
 		"prefix": "file",
 		"description": "A PHP file",
@@ -38,6 +38,46 @@
 			" */",
 			"",
 			"$0"
+		]
+	},
+	"PHP Class (crawler)": {
+		"scope": "php",
+		"prefix": "class",
+		"description": "A PHP class",
+		"body": [
+			"/**",
+			" * $6",
+			" *",
+			" * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>",
+			" * @copyright  2019, Maximilian Schmidt",
+			" * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT",
+			" * @package    mcstreetguy/crawler",
+			" * @since      ${7:always}",
+			" */",
+			"class ${1:Class} ${2:extends ${3:AbstractClass}} {4:implements ${5:Interface}}",
+			"{",
+			"    $0",
+			"}"
+		]
+	},
+	"PHP Interface (crawler)": {
+		"scope": "php",
+		"prefix": "interface",
+		"description": "A PHP interface",
+		"body": [
+			"/**",
+			" * $2",
+			" *",
+			" * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>",
+			" * @copyright  2019, Maximilian Schmidt",
+			" * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT",
+			" * @package    mcstreetguy/crawler",
+			" * @since      ${3:always}",
+			" */",
+			"interface ${1:Interface}",
+			"{",
+			"    $0",
+			"}"
 		]
 	}
 }
