@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>MCStreetguy/Crawler</title>
+    <parser>
+        <target>Docs/Api/struct</target>
+        <encoding>utf8</encoding>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+        <default-package-name>mcstreetguy/crawler</default-package-name>
+    </parser>
+    <transformer>
+        <target>Docs/Api</target>
+    </transformer>
+    <transformations>
+        <template name="responsive" />
+    </transformations>
+    <files>
+        <directory>Classes</directory>
+    </files>
+</phpdoc>
