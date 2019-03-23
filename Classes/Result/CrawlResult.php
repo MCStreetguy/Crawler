@@ -14,6 +14,7 @@ namespace MCStreetguy\Crawler\Result;
 
 use Psr\Http\Message\UriInterface;
 use Ramsey\Uuid\Uuid;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Represents a crawl result.
@@ -36,6 +37,9 @@ class CrawlResult
 
     /** @var null|UriInterface The uri on which this result has been found */
     protected $foundOn;
+
+    /** @var ResponseInterface The response of the request to the uri of this result */
+    protected $response;
 
     /**
      * Constructs a new instance.
@@ -86,5 +90,15 @@ class CrawlResult
     public function getFoundOn()
     {
         return $this->foundOn;
+    }
+
+    /**
+     * Get the response of the request to the uri of this result
+     *
+     * @return ResponseInterface
+     */
+    public function getResponse() : ResponseInterface
+    {
+        return $this->response;
     }
 }

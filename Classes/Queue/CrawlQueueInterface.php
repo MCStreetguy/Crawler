@@ -104,4 +104,12 @@ interface CrawlQueueInterface
      * @return void
      */
     public function clearFinished();
+
+    /**
+     * Mark an uri as finished.
+     *
+     * @param UriInterface $uri The uri to mark as finished
+     * @return void
+     */
+    public function finish(UriInterface $uri);
 }

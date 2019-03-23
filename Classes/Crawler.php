@@ -15,6 +15,8 @@ namespace MCStreetguy\Crawler;
 use MCStreetguy\Crawler\Config\CrawlConfigurationInterface;
 use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
 use Psr\Http\Message\UriInterface;
+use MCStreetguy\Crawler\Queue\CrawlQueueInterface;
+use MCStreetguy\Crawler\Queue\CrawlQueue;
 
 /**
  * The main class of the web-crawler.
@@ -33,38 +35,29 @@ class Crawler
     /** @var CrawlConfigurationInterface The crawler configuration object. */
     protected $configuration;
 
+    /** @var CrawlQueueInterface The crawl queue */
+    protected $queue;
+
     /**
      * Constructs a new instance.
      *
      * @param CrawlConfigurationInterface $config The configuration object to use for the crawler
+     * @param CrawlQueueInterface $queue The crawl queue to use for the crawler
      * @return void
      */
-    public function __construct(CrawlConfigurationInterface $config = null)
-    {
+    public function __construct(
+        CrawlConfigurationInterface $config = null,
+        CrawlQueueInterface $queue = null
+    ) {
         if ($config === null) {
             $config = new DefaultCrawlConfiguration;
         }
-
+        
+        if ($queue === null) {
+            $queue = new CrawlQueue;
+        }
+        
         $this->configuration = $config;
-    }
-
-    /**
-     * Get the target url to crawl.
-     *
-     * @return UriInterface
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * Get the crawler configuration object.
-     *
-     * @return CrawlConfigurationInterface
-     */
-    public function getConfiguration()
-    {
-        return $this->configuration;
+        $this->queue = $queue;
     }
 }
