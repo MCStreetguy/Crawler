@@ -60,4 +60,56 @@ class Crawler
         $this->configuration = $config;
         $this->queue = $queue;
     }
+
+    /**
+     * Get the base target uri of the crawler.
+     *
+     * @return UriInterface|null
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Get the configuration object of the crawler.
+     *
+     * @return CrawlConfigurationInterface
+     */
+    public function getConfiguration() : CrawlConfigurationInterface
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * Set the configuration object of the crawler.
+     *
+     * @param CrawlConfigurationInterface $config
+     * @return void
+     */
+    public function setConfiguration(CrawlConfigurationInterface $config)
+    {
+        $this->configuration = $config;
+    }
+
+    /**
+     * Get the crawl queue.
+     *
+     * @return CrawlQueueInterface
+     */
+    public function getCrawlQueue() : CrawlQueueInterface
+    {
+        return $this->queue;
+    }
+    
+    /**
+     * Set the crawl queue to use.
+     *
+     * @param CrawlQueueInterface $queue
+     * @return void
+     */
+    public function setCrawlQueue(CrawlQueueInterface $queue)
+    {
+        $this->queue = $queue;
+    }
 }
