@@ -124,7 +124,3 @@ $crawler->addValidator(new DebugValidator('http://example.com/'));
 
 The basic usage of this library shall be clear at this point.
 Have a close look on the documentation, the source code and the `Tests/` folder for more information and some more advanced examples.
-
-Have fun and don't hesitate to report any problems directly to the Issues section.
-
-## 

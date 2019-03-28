@@ -14,19 +14,13 @@
         <default-package-name>mcstreetguy/crawler</default-package-name>
     </parser>
     <transformer>
-        <target>Docs/Api</target>
+        <target>Docs</target>
     </transformer>
     <transformations>
-        <!-- <template name="checkstyle" /> -->
-        <!-- <template name="clean" /> -->
-        <!-- <template name="new-black" /> -->
-        <!-- <template name="old-ocean" /> -->
-        <!-- <template name="responsive" /> -->
-        <!-- <template name="responsive-twig" /> -->
-        <!-- <template name="xml" /> -->
-        <!-- <template name="zend" /> -->
-
+        -- Generate html documentation
         <template name="responsive-twig" />
+        -- Generate markdown docs for GitHub
+        <template name="vendor/cvuorinen/phpdoc-markdown-public/data/templates/markdown-public" />
     </transformations>
     <files>
         <directory>Classes</directory>
