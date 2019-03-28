@@ -17,6 +17,7 @@ use Psr\Http\Message\UriInterface;
 /**
  * The default crawl queue.
  *
+ * @api
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT

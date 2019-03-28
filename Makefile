@@ -5,7 +5,7 @@ update:
 	@composer update -o
 
 build-docs: ensure-dependencies
-	@rm -rf Docs/Api
+	@rm -rf Docs/*
 	@./vendor/bin/phpdoc -c "./phpdoc.xml"
 
 ensure-dependencies: composer.lock

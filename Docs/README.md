@@ -3,7 +3,6 @@
 ## Table of Contents
 
 * [ContentTooLargeException](#contenttoolargeexception)
-    * [forSize](#forsize)
 * [Crawler](#crawler)
     * [__construct](#__construct)
     * [execute](#execute)
@@ -53,7 +52,6 @@
     * [getRequestTimeout](#getrequesttimeout)
     * [buildGuzzleRequestOptions](#buildguzzlerequestoptions)
 * [NullStream](#nullstream)
-    * [__toString](#__tostring)
     * [close](#close)
     * [detach](#detach)
     * [getSize](#getsize)
@@ -89,30 +87,6 @@ This exception signals the crawler to continue with the process but drop the res
 * Full name: \MCStreetguy\Crawler\Exceptions\ContentTooLargeException
 * Parent class: \MCStreetguy\Crawler\Exceptions\CrawlerException
 
-
-### forSize
-
-Creates an instance of ContentTooLargeException with a predefined error message.
-
-```php
-ContentTooLargeException::forSize( float $maximum, float $actual, string|null $uri = null ): self
-```
-
-Creates an instance of ContentTooLargeException with a predefined error message according to the passed arguments.
-
-* This method is **static**.
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `$maximum` | **float** | The maximum response size allowed |
-| `$actual` | **float** | The actual response size given |
-| `$uri` | **string&#124;null** | The uri which has been downloaded |
-
-
-
-
----
 
 ## Crawler
 
@@ -997,33 +971,6 @@ Seeking in the stream will raise an \RuntimeException as this is technically not
 * Full name: \MCStreetguy\Crawler\Miscellaneous\NullStream
 * This class implements: \Psr\Http\Message\StreamInterface
 
-
-### __toString
-
-Reads all data from the stream into a string, from the beginning to end.
-
-```php
-NullStream::__toString(  ): string
-```
-
-This method MUST attempt to seek to the beginning of the stream before
-reading data and read the stream until the end is reached.
-
-Warning: This could attempt to load a large amount of data into memory.
-
-This method MUST NOT raise an exception in order to conform with PHP's
-string casting operations.
-
-As the NullStream is a mocking object, this will always return an empty string.
-
-
-
-
-**See Also:**
-
-* http://php.net/manual/en/language.oop5.magic.php#object.tostring 
-
----
 
 ### close
 

@@ -19,12 +19,12 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Represents a crawl result.
  *
+ * @api
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
- * @api
  */
 class CrawlResult
 {

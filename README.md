@@ -75,7 +75,7 @@ Copying the above parts together into a script file and executing it on the comm
 > Crawled: http://www.iana.org/domains
 > Crawled: http://www.iana.org/numbers
 > ^C
-> > machine:~ testuser$
+> machine:~ testuser$
 
 _Wait! Why is this even working?_
 
@@ -118,7 +118,7 @@ $crawler->addValidator(new DebugValidator('http://example.com/'));
 
 > machine:~ testuser$ php test.php
 > Crawled: http://example.com/
-> > machine:~ testuser$
+> machine:~ testuser$
 
 ### Summary
 

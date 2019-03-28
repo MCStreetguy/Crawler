@@ -17,9 +17,7 @@
         <target>Docs/html</target>
     </transformer>
     <transformations>
-        -- Generate html documentation
         <template name="responsive-twig" />
-        -- Generate markdown docs for GitHub
         <template name="vendor/mcstreetguy/phpdoc-markdown-public/data/templates/markdown-public" />
     </transformations>
     <files>

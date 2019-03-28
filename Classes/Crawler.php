@@ -32,12 +32,12 @@ use MCStreetguy\Crawler\Exceptions\CrawlerException;
 /**
  * The main class of the web-crawler.
  *
+ * @api
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
- * @api
  */
 class Crawler
 {

@@ -17,6 +17,7 @@ use Psr\Http\Message\UriInterface;
 /**
  * A standard interface for validator classes.
  *
+ * @api
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
@@ -30,6 +31,7 @@ interface ValidatorInterface
      *
      * Check if the given uri is valid, thus may be crawled.
      *
+     * @api
      * @param UriInterface $target The uri to validate
      * @return bool
      */

@@ -3,6 +3,7 @@
 /**
  * This file is part of the mcstreetguy/crawler package.
  *
+ * @internal
  * @package    mcstreetguy/crawler
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
@@ -16,20 +17,19 @@ namespace MCStreetguy\Crawler\Exceptions;
  * The content of the response is too large to be downloaded.
  * This exception signals the crawler to continue with the process but drop the response body.
  *
+ * @internal
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
- * @internal
  */
 class ContentTooLargeException extends CrawlerException
 {
     /**
      * Creates an instance of ContentTooLargeException with a predefined error message.
      *
-     * Creates an instance of ContentTooLargeException with a predefined error message according to the passed arguments.
-     *
+     * @internal
      * @param float $maximum The maximum response size allowed
      * @param float $actual The actual response size given
      * @param string|null $uri The uri which has been downloaded

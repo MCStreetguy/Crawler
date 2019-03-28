@@ -3,6 +3,7 @@
 /**
  * This file is part of the mcstreetguy/crawler package.
  *
+ * @internal
  * @package    mcstreetguy/crawler
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
@@ -22,12 +23,12 @@ use Psr\Http\Message\StreamInterface;
  * Reading from the stream returns nothing as it is always at the end (eof).
  * Seeking in the stream will raise an \RuntimeException as this is technically not possible.
  *
+ * @internal
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
- * @internal
  */
 class NullStream implements StreamInterface
 {
@@ -44,6 +45,7 @@ class NullStream implements StreamInterface
      *
      * As the NullStream is a mocking object, this will always return an empty string.
      *
+     * @internal
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */

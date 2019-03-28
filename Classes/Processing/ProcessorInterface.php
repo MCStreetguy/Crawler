@@ -19,6 +19,7 @@ use MCStreetguy\Crawler\Result\CrawlResult;
 /**
  * A standard interface for processor classes.
  *
+ * @api
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
@@ -32,6 +33,7 @@ interface ProcessorInterface
      *
      * Invoke this processor.
      *
+     * @api
      * @param CrawlResult $result The crawl result to process
      * @return void
      */
