@@ -34,6 +34,8 @@ class CrawlQueue implements CrawlQueueInterface
     /**
      * Constructs a new instance
      *
+     * Constructs a new instance
+     *
      * @return void
      */
     public function __construct()

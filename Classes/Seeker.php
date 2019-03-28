@@ -77,17 +77,4 @@ class Seeker
 
         return $links;
     }
-
-    /**
-     * Browse the given input for further links and reduce the result set to unique uris.
-     *
-     * @param UriInterface $uri The uri belonging to the given response
-     * @param string|ResponseInterface $input The input to search through
-     * @return UriInterface[]
-     * @throws \InvalidArgumentException
-     */
-    public function distinct(UriInterface $uri, $input)
-    {
-        return array_unique($this->browse($uri, $input));
-    }
 }

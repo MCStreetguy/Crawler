@@ -28,12 +28,16 @@ interface CrawlQueueInterface
     /**
      * Adds an uri to the queue.
      *
+     * Adds an uri to the queue.
+     *
      * @param UriInterface $uri The uri to add
      * @return void
      */
     public function add(UriInterface $uri);
 
     /**
+     * Check if the given uri is already in the queue.
+     *
      * Check if the given uri is already in the queue.
      *
      * @param UriInterface $uri The uri to check for
@@ -44,12 +48,16 @@ interface CrawlQueueInterface
     /**
      * Check if the given uri is already in the queue, ignoring if it is finished already.
      *
+     * Check if the given uri is already in the queue, ignoring if it is finished already.
+     *
      * @param UriInterface $uri The uri to check for
      * @return bool If the uri has been found
      */
     public function hasAny(UriInterface $uri): bool;
 
     /**
+     * Revoke the given uri from the queue if possible.
+     *
      * Revoke the given uri from the queue if possible.
      *
      * @param UriInterface $uri The uri to revoke
@@ -60,11 +68,15 @@ interface CrawlQueueInterface
     /**
      * Check if there is another uri in the queue.
      *
+     * Check if there is another uri in the queue.
+     *
      * @return bool If there is a next element
      */
     public function hasNext(): bool;
 
     /**
+     * Get the next uri in this queue.
+     *
      * Get the next uri in this queue.
      *
      * @return null|UriInterface The next uri element (if available)
@@ -74,11 +86,15 @@ interface CrawlQueueInterface
     /**
      * Get all uris in this queue.
      *
+     * Get all uris in this queue.
+     *
      * @return UriInterface[] The uris in this queue
      */
     public function getAll(): array;
 
     /**
+     * Get all pending uris in this queue.
+     *
      * Get all pending uris in this queue.
      *
      * @return UriInterface[] The uris in this queue
@@ -88,11 +104,15 @@ interface CrawlQueueInterface
     /**
      * Get all finished uris in this queue.
      *
+     * Get all finished uris in this queue.
+     *
      * @return UriInterface[] The uris in this queue
      */
     public function getAllFinished(): array;
 
     /**
+     * Clear all uris from the queue.
+     *
      * Clear all uris from the queue.
      *
      * @return void
@@ -102,6 +122,8 @@ interface CrawlQueueInterface
     /**
      * Clear all pending uris from the queue.
      *
+     * Clear all pending uris from the queue.
+     *
      * @return void
      */
     public function clearPending();
@@ -109,11 +131,15 @@ interface CrawlQueueInterface
     /**
      * Clear all finished uris from the queue.
      *
+     * Clear all finished uris from the queue.
+     *
      * @return void
      */
     public function clearFinished();
 
     /**
+     * Mark an uri as finished.
+     *
      * Mark an uri as finished.
      *
      * @param UriInterface $uri The uri to mark as finished

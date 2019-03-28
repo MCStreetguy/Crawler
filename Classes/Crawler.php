@@ -24,6 +24,9 @@ use MCStreetguy\Crawler\Processing\Validator\ValidatorInterface;
 use GuzzleHttp\Client;
 use MCStreetguy\Crawler\Result\CrawlResult;
 use MCStreetguy\Crawler\Result\ResultSet;
+use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
+use GuzzleHttp\Psr7\Response;
+use MCStreetguy\Crawler\Miscellaneous\NullStream;
 
 /**
  * The main class of the web-crawler.
@@ -118,19 +121,25 @@ class Crawler
         }
 
         $this->target = $target;
-        // $this->queue->add($target);
+        $this->queue->add($target);
 
         $results = [];
-        $current = $target;
-        // $current = $this->queue->getNext();
+        // $current = $target;
+        $current = $this->queue->getNext();
+        $crawlCount = 0;
 
         if ($current === null) {
             throw new \RuntimeException('Something went wrong while starting the crawling process!', 1553774441674);
         }
 
         do {
-            $response = $this->client->get($current);
-            $furtherLinks = $this->seeker->browse($current, $response);
+            try {
+                $response = $this->client->get($current);
+                $furtherLinks = $this->seeker->browse($current, $response);
+            } catch (ContentTooLargeException $e) {
+                $response = $response->withBody(new NullStream);
+                $furtherLinks = [];
+            }
 
             foreach ($furtherLinks as $linkUri) {
                 $isValid = true;
@@ -149,20 +158,18 @@ class Crawler
             foreach ($this->processors as $processor) {
                 $processor->invoke($result);
             }
-
-            \Kint::dump($this->queue->getAllPending(), $this->queue->hasNext(), $this->queue->getNext());
             
             $this->queue->finish($current);
+
+            if (++$crawlCount >= $this->configuration->getMaximumCrawlCount()) {
+                break;
+            }
+
             $current = $this->queue->getNext();
-
-            \Kint::dump($this->queue->getAllPending(), $this->queue->hasNext(), $this->queue->getNext());
-
-            \Kint::dump($current);
         } while ($current !== null);
 
         $resultSet = new ResultSet($results);
 
-        // \Kint::dump($resultSet);
         echo PHP_EOL . '----------------------------' . PHP_EOL;
         foreach ($resultSet as $result) {
             echo (string)$result->getUri() . ': ';

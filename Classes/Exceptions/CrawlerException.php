@@ -10,12 +10,10 @@
  * @version    SVN: $Id$
  */
 
-namespace MCStreetguy\Crawler\Processing\Validator;
-
-use Psr\Http\Message\UriInterface;
+namespace MCStreetguy\Crawler\Exceptions;
 
 /**
- * A standard interface for validator classes.
+ * A general exception class.
  *
  * @author     Maximilian Schmidt <maximilianschmidt404@gmail.com>
  * @copyright  2019, Maximilian Schmidt
@@ -23,15 +21,6 @@ use Psr\Http\Message\UriInterface;
  * @package    mcstreetguy/crawler
  * @since      always
  */
-interface ValidatorInterface
+class CrawlerException extends \Exception
 {
-    /**
-     * Check if the given uri is valid, thus may be crawled.
-     *
-     * Check if the given uri is valid, thus may be crawled.
-     *
-     * @param UriInterface $target The uri to validate
-     * @return bool
-     */
-    public function isValid(UriInterface $target);
 }

@@ -30,6 +30,8 @@ interface ProcessorInterface
     /**
      * Invoke this processor.
      *
+     * Invoke this processor.
+     *
      * @param CrawlResult $result The crawl result to process
      * @return void
      */

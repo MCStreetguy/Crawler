@@ -44,6 +44,8 @@ class CrawlResult
     /**
      * Constructs a new instance.
      *
+     * Constructs a new instance.
+     *
      * @param UriInterface $uri The uri of this CrawlResult
      * @param ResponseInterface $response The response of the request to the given uri
      * @param null|UriInterface[] $links All links found within the response
@@ -64,6 +66,8 @@ class CrawlResult
     /**
      * Get the UUID representing this result
      *
+     * Get the UUID representing this result
+     *
      * @return string
      */
     public function getIdentifier() : string
@@ -72,6 +76,8 @@ class CrawlResult
     }
 
     /**
+     * Get the uri of this result.
+     *
      * Get the uri of this result.
      *
      * @return UriInterface
@@ -84,6 +90,8 @@ class CrawlResult
     /**
      * Get the response of the request to the uri of this result
      *
+     * Get the response of the request to the uri of this result
+     *
      * @return ResponseInterface
      */
     public function getResponse() : ResponseInterface
@@ -92,6 +100,8 @@ class CrawlResult
     }
 
     /**
+     * Get the links found within the response.
+     *
      * Get the links found within the response.
      *
      * @return UriInterface[]
@@ -104,6 +114,8 @@ class CrawlResult
     /**
      * Check if the bound request was successful.
      *
+     * Check if the bound request was successful.
+     *
      * @return bool
      */
     public function success()
@@ -113,6 +125,8 @@ class CrawlResult
     }
 
     /**
+     * Check if the bound request was a failure.
+     *
      * Check if the bound request was a failure.
      *
      * @return bool

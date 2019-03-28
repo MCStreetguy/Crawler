@@ -31,6 +31,18 @@ class ResultSet implements \Iterator
     /** @var CrawlResult[] The CrawlResult objects associated with this ResultSet */
     protected $contents;
 
+    /** @var int The number of uris that have been crawled */
+    protected $urisCrawled;
+
+    /** @var int The number of uris that have been crawled successfully */
+    protected $urisSucceeded;
+
+    /** @var int The number of uris that failed crawling */
+    protected $urisFailed;
+
+    /** @var int The number of invalid uris that have been dropped */
+    protected $droppedUris;
+
     /** @var int The current iterator index */
     protected $index;
 
@@ -51,61 +63,80 @@ class ResultSet implements \Iterator
     }
 
     /**
-     * Returns the current element.
+     * Get the contents of this ResultSet as an array.
      *
-     * @return CrawlResult
-     * @link http://php.net/manual/en/iterator.current.php
+     * Get the contents of this ResultSet as an array.
+     *
+     * @return CrawlResult[]
      */
-    public function current()
+    public function toArray()
     {
-        return $this->contents[$this->index];
+        return $this->contents;
     }
 
     /**
-     * Returns the key of the current element.
+     * Get the stats of this ResultSet as an associative array.
+     *
+     * Get the stats of this ResultSet as an associative array.
+     *
+     * @return array
+     */
+    public function getStats()
+    {
+        return [];
+    }
+
+    /**
+     * Get the number of uris that have been crawled totally.
+     *
+     * Get the number of uris that have been crawled totally.
      *
      * @return int
-     * @link http://php.net/manual/en/iterator.key.php
      */
-    public function key()
+    public function getUrisCrawled()
     {
-        return $this->index;
+        return $this->urisCrawled;
     }
 
     /**
-     * Moves the current position to the next element.
+     * Get the number of uris that have been crawled successfully.
      *
-     * @return void
-     * @link http://php.net/manual/en/iterator.next.php
-     */
-    public function next()
-    {
-        ++$this->index;
-    }
-
-    /**
-     * Rewinds back to the first element of the Iterator.
+     * Get the number of uris that have been crawled successfully.
      *
-     * @return void
-     * @link http://php.net/manual/en/iterator.rewind.php
+     * @return int
      */
-    public function rewind()
+    public function getUrisSucceeded()
     {
-        $this->index = 0;
+        return $this->urisSucceeded;
     }
 
     /**
-     * Checks if current position is valid.
+     * Get the number of uris that failed crawling.
      *
-     * @return bool
-     * @link http://php.net/manual/en/iterator.valid.php
+     * Get the number of uris that failed crawling.
+     *
+     * @return int
      */
-    public function valid()
+    public function getFailedUris()
     {
-        return isset($this->contents[$this->index]);
+        return $this->urisFailed;
     }
 
     /**
+     * Get the number of invalid uris that have been dropped.
+     *
+     * Get the number of invalid uris that have been dropped.
+     *
+     * @return int
+     */
+    public function getDroppedUris()
+    {
+        return $this->droppedUris;
+    }
+
+    /**
+     * Convert this ResultSet to a Node tree structure.
+     *
      * Convert this ResultSet to a Node tree structure.
      *
      * @return NodeInterface The root node of the tree
@@ -121,5 +152,70 @@ class ResultSet implements \Iterator
         // $tree = new NodeBuilder($rootNode);
 
         return $rootNode;
+    }
+
+    /**
+     * Returns the current element.
+     *
+     * Returns the current element.
+     *
+     * @return CrawlResult
+     * @link http://php.net/manual/en/iterator.current.php
+     */
+    public function current()
+    {
+        return $this->contents[$this->index];
+    }
+
+    /**
+     * Returns the key of the current element.
+     *
+     * Returns the key of the current element.
+     *
+     * @return int
+     * @link http://php.net/manual/en/iterator.key.php
+     */
+    public function key()
+    {
+        return $this->index;
+    }
+
+    /**
+     * Moves the current position to the next element.
+     *
+     * Moves the current position to the next element.
+     *
+     * @return void
+     * @link http://php.net/manual/en/iterator.next.php
+     */
+    public function next()
+    {
+        ++$this->index;
+    }
+
+    /**
+     * Rewinds back to the first element of the Iterator.
+     *
+     * Rewinds back to the first element of the Iterator.
+     *
+     * @return void
+     * @link http://php.net/manual/en/iterator.rewind.php
+     */
+    public function rewind()
+    {
+        $this->index = 0;
+    }
+
+    /**
+     * Checks if current position is valid.
+     *
+     * Checks if current position is valid.
+     *
+     * @return bool
+     * @link http://php.net/manual/en/iterator.valid.php
+     */
+    public function valid()
+    {
+        return isset($this->contents[$this->index]);
     }
 }

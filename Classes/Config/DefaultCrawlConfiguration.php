@@ -13,6 +13,8 @@
 namespace MCStreetguy\Crawler\Config;
 
 use Ramsey\Uuid\Uuid;
+use Psr\Http\Message\ResponseInterface;
+use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
 
 /**
  * The default crawl configuration class.
@@ -55,6 +57,25 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
         return $this->maxResponseSize;
     }
 
+    /**
+     * Validate the given response in terms of content size.
+     *
+     * Validate the given response in terms of content size.
+     *
+     * @param ResponseInterface $response
+     * @return void
+     * @throws ContentTooLargeException
+     */
+    public function validateResponseSize(ResponseInterface $response)
+    {
+        $maximum = $this->getMaximumResponseSize();
+        $actual = floatval($response->getHeader('Content-Length')['value']);
+
+        if ($actual > $maximum) {
+            throw ContentTooLargeException::forSize($maximum, $actual);
+        }
+    }
+
     /** @inheritDoc */
     public function getRequestDelay(): float
     {
@@ -70,9 +91,8 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
             'synchronous' => true,
             // 'stream' => true,
             // 'http_errors' => false,
-            'headers' => [
-                'X-Crawler-Request' => Uuid::uuid4(),
-            ],
+            'headers' => ['X-Crawler-Request' => (string)Uuid::uuid4(),],
+            'on_headers' => [$this, 'validateResponseSize'],
         ];
     }
 }
