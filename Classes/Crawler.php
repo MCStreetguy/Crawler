@@ -20,6 +20,10 @@ use MCStreetguy\Crawler\Queue\CrawlQueue;
 use GuzzleHttp\Psr7\Uri;
 use Webmozart\Assert\Assert;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
+use MCStreetguy\Crawler\Processing\Validator\ValidatorInterface;
+use GuzzleHttp\Client;
+use MCStreetguy\Crawler\Result\CrawlResult;
+use MCStreetguy\Crawler\Result\ResultSet;
 
 /**
  * The main class of the web-crawler.
@@ -44,8 +48,14 @@ class Crawler
     /** @var Seeker The link-seeker */
     protected $seeker;
 
-    /** @var array The registered processors */
+    /** @var ProcessorInterface[] The registered processors */
     protected $processors;
+    
+    /** @var ValidatorInterface[] The registered validators */
+    protected $validators;
+
+    /** @var Client The http client */
+    protected $client;
 
     /**
      * Constructs a new instance.
@@ -53,30 +63,38 @@ class Crawler
      * @param CrawlConfigurationInterface|null $config The configuration object to use for the crawler
      * @param CrawlQueueInterface|null $queue The crawl queue to use for the crawler
      * @param ProcessorInterface[] $processors The processors to use for the crawl-results
+     * @param ValidatorInterface[] $validators The validators to use for the crawler
      * @return void
      * @throws \InvalidArgumentException
      */
     public function __construct(
         CrawlConfigurationInterface $config = null,
         CrawlQueueInterface $queue = null,
-        array $processors = []
+        array $processors = [],
+        array $validators = []
     ) {
         if ($config === null) {
             $config = new DefaultCrawlConfiguration;
         }
+        $this->configuration = $config;
         
         if ($queue === null) {
             $queue = new CrawlQueue;
         }
+        $this->queue = $queue;
 
         if (!empty($processors)) {
             Assert::allIsInstanceOf($processors, ProcessorInterface::class);
         }
-        
-        $this->configuration = $config;
-        $this->queue = $queue;
         $this->processors = $processors;
-        $this->seeker = new Seeker;
+
+        if (!empty($validators)) {
+            Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        }
+        $this->validators = $validators;
+
+        $this->seeker = new Seeker();
+        $this->client = new Client();
     }
 
     /**
@@ -101,6 +119,28 @@ class Crawler
 
         $this->target = $target;
         $this->queue->add($target);
+
+        $results = [];
+        $current = $this->queue->getNext();
+
+        if ($current === null) {
+            throw new \RuntimeException('Something went wrong while starting the crawling process!', 1553774441674);
+        }
+
+        do {
+            $response = $this->client->request('GET', $current, $this->configuration->buildGuzzleRequestOptions());
+            
+            $furtherLinks = $this->seeker->browse($current, $response);
+            $uniqueLinks = array_unique($furtherLinks, SORT_NATURAL);
+
+            $result = new CrawlResult($current, $response, $furtherLinks);
+            $this->queue->finish($current);
+
+            $results[] = $result;
+            $current = $this->queue->getNext();
+        } while ($current !== null);
+
+        $resultSet = new ResultSet($results);
     }
 
     /**
@@ -201,5 +241,53 @@ class Crawler
     {
         Assert::allIsInstanceOf($processors, ProcessorInterface::class);
         $this->processors = $processors;
+    }
+
+    /**
+     * Get the registered validators.
+     *
+     * @return ValidatorInterface[]
+     */
+    public function getValidators()
+    {
+        return $this->validators;
+    }
+
+    /**
+     * Add a validator instance to the crawler.
+     *
+     * @param ProcessorInterface $validator The validator to add
+     * @return void
+     */
+    public function addValidator(ValidatorInterface $validator)
+    {
+        $this->validators[] = $validator;
+    }
+
+    /**
+     * Add multiple validators to the crawler.
+     * Duplicate validators will be overridden by the new one.
+     *
+     * @param ValidatorInterface[] $validators The validators to add
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function addValidators(array $validators)
+    {
+        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        $this->validators = array_merge($this->validators, $validators);
+    }
+
+    /**
+     * Set the validator array directly.
+     *
+     * @param ValidatorInterface[] $validators The validators to set
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function setValidators(array $validators)
+    {
+        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        $this->validators = $validators;
     }
 }

@@ -12,6 +12,8 @@
 
 namespace MCStreetguy\Crawler\Config;
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * The default crawl configuration class.
  *
@@ -23,45 +25,54 @@ namespace MCStreetguy\Crawler\Config;
  */
 class DefaultCrawlConfiguration implements CrawlConfigurationInterface
 {
-    /**
-     * The maximum crawl count.
-     * @var int
-     */
+    /** @var int The maximum crawl count. */
     protected $maxCrawlCount = 0;
 
-    /**
-     * The maximum crawl depth.
-     * @var int
-     */
+    /** @var int The maximum crawl depth. */
     protected $maxDepth = 0;
 
-    /**
-     * The maximum response size.
-     * @var float
-     */
+    /** @var float The maximum response size. */
     protected $maxResponseSize = 5.243e+6;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @var float The  */
+    protected $requestDelay = 0.0;
+
+    /** @inheritDoc */
     public function getMaximumCrawlCount(): int
     {
         return $this->maxCrawlCount;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function getMaximumDepth(): int
     {
         return $this->maxDepth;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function getMaximumResponseSize(): float
     {
         return $this->maxResponseSize;
+    }
+
+    /** @inheritDoc */
+    public function getRequestDelay(): float
+    {
+        return $this->requestDelay;
+    }
+
+    /** @inheritDoc */
+    public function buildGuzzleRequestOptions(): array
+    {
+        return [
+            'allow_redirects' => true,
+            'delay' => $this->getRequestDelay(),
+            'synchronous' => true,
+            // 'stream' => true,
+            // 'http_errors' => false,
+            'headers' => [
+                'X-Crawler-Request' => Uuid::uuid4(),
+            ],
+        ];
     }
 }

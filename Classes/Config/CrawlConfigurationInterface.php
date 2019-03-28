@@ -49,4 +49,22 @@ interface CrawlConfigurationInterface
      * @return int
      */
     public function getMaximumDepth(): int;
+
+    /**
+     * Get the delay in milliseconds before each request.
+     *
+     * Get the delay in milliseconds before each request.
+     *
+     * @return float
+     */
+    public function getRequestDelay(): float;
+
+    /**
+     * Build up the guzzle request options array.
+     *
+     * Build up the guzzle request options array.
+     *
+     * @return array
+     */
+    public function buildGuzzleRequestOptions(): array;
 }

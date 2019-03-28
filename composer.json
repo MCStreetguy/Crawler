@@ -11,7 +11,8 @@
         "guzzlehttp/psr7": "^1.5",
         "nicmart/tree": "^0.2.7",
         "webmozart/assert": "^1.4",
-        "ramsey/uuid": "^3.8"
+        "ramsey/uuid": "^3.8",
+        "paquettg/php-html-parser": "^2.0"
     },
     "require-dev": {
         "kint-php/kint": "^3.2",

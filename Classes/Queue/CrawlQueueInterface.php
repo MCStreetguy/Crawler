@@ -61,7 +61,7 @@ interface CrawlQueueInterface
      *
      * @return null|UriInterface The next uri element (if available)
      */
-    public function getNext(): UriInterface;
+    public function getNext();
 
     /**
      * Get all uris in this queue.

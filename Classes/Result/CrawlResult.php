@@ -35,31 +35,30 @@ class CrawlResult
     /** @var UriInterface The uri of this result */
     protected $uri;
 
-    /** @var null|UriInterface The uri on which this result has been found */
-    protected $foundOn;
-
     /** @var ResponseInterface The response of the request to the uri of this result */
     protected $response;
+
+    /** @var UriInterface[] The links found within this results response */
+    protected $links;
 
     /**
      * Constructs a new instance.
      *
      * @param UriInterface $uri The uri of this CrawlResult
-     * @param null|UriInterface $foundOn The uri on which this result has been found
+     * @param ResponseInterface $response The response of the request to the given uri
+     * @param null|UriInterface[] $links All links found within the response
      * @return void
      */
-    public function __construct(UriInterface $uri, UriInterface $foundOn = null)
-    {
+    public function __construct(
+        UriInterface $uri,
+        ResponseInterface $response,
+        array $links = []
+    ) {
         $this->uri = $uri;
-        $this->foundOn = $foundOn;
+        $this->response = $response;
+        $this->links = $links;
 
-        $identifier = (string) $uri;
-
-        if ($foundOn !== null) {
-            $identifier .= '_' . (string) $foundOn;
-        }
-
-        $this->identifier = Uuid::uuid5(self::NS, $identifier);
+        $this->identifier = Uuid::uuid5(self::NS, (string) $uri);
     }
 
     /**
@@ -83,16 +82,6 @@ class CrawlResult
     }
 
     /**
-     * Get the parent uri of this result if available.
-     *
-     * @return null|UriInterface
-     */
-    public function getFoundOn()
-    {
-        return $this->foundOn;
-    }
-
-    /**
      * Get the response of the request to the uri of this result
      *
      * @return ResponseInterface
@@ -100,5 +89,15 @@ class CrawlResult
     public function getResponse() : ResponseInterface
     {
         return $this->response;
+    }
+
+    /**
+     * Get the links found within the response.
+     *
+     * @return UriInterface[]
+     */
+    public function getLinks()
+    {
+        return $this->links;
     }
 }
