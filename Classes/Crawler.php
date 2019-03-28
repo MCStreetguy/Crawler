@@ -17,6 +17,9 @@ use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
 use Psr\Http\Message\UriInterface;
 use MCStreetguy\Crawler\Queue\CrawlQueueInterface;
 use MCStreetguy\Crawler\Queue\CrawlQueue;
+use GuzzleHttp\Psr7\Uri;
+use Webmozart\Assert\Assert;
+use MCStreetguy\Crawler\Processing\ProcessorInterface;
 
 /**
  * The main class of the web-crawler.
@@ -38,16 +41,25 @@ class Crawler
     /** @var CrawlQueueInterface The crawl queue */
     protected $queue;
 
+    /** @var Seeker The link-seeker */
+    protected $seeker;
+
+    /** @var array The registered processors */
+    protected $processors;
+
     /**
      * Constructs a new instance.
      *
-     * @param CrawlConfigurationInterface $config The configuration object to use for the crawler
-     * @param CrawlQueueInterface $queue The crawl queue to use for the crawler
+     * @param CrawlConfigurationInterface|null $config The configuration object to use for the crawler
+     * @param CrawlQueueInterface|null $queue The crawl queue to use for the crawler
+     * @param ProcessorInterface[] $processors The processors to use for the crawl-results
      * @return void
+     * @throws \InvalidArgumentException
      */
     public function __construct(
         CrawlConfigurationInterface $config = null,
-        CrawlQueueInterface $queue = null
+        CrawlQueueInterface $queue = null,
+        array $processors = []
     ) {
         if ($config === null) {
             $config = new DefaultCrawlConfiguration;
@@ -56,9 +68,39 @@ class Crawler
         if ($queue === null) {
             $queue = new CrawlQueue;
         }
+
+        if (!empty($processors)) {
+            Assert::allIsInstanceOf($processors, ProcessorInterface::class);
+        }
         
         $this->configuration = $config;
         $this->queue = $queue;
+        $this->processors = $processors;
+        $this->seeker = new Seeker;
+    }
+
+    /**
+     * Execute the crawler for the given target.
+     *
+     * @param string|UriInterface $target The target to crawl
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function execute($target)
+    {
+        if (is_string($target)) {
+            $target = new Uri($target);
+        } elseif (! $target instanceof UriInterface) {
+            $type = gettype($target);
+
+            throw new \InvalidArgumentException(
+                "\$target has to be a string or an instance of UriInterface, $type given!",
+                1553768163007
+            );
+        }
+
+        $this->target = $target;
+        $this->queue->add($target);
     }
 
     /**
@@ -111,5 +153,53 @@ class Crawler
     public function setCrawlQueue(CrawlQueueInterface $queue)
     {
         $this->queue = $queue;
+    }
+
+    /**
+     * Get the registered processors.
+     *
+     * @return ProcessorInterface[]
+     */
+    public function getProcessors()
+    {
+        return $this->processors;
+    }
+
+    /**
+     * Add a processor instance to the crawler.
+     *
+     * @param ProcessorInterface $processor The processor to add
+     * @return void
+     */
+    public function addProcessor(ProcessorInterface $processor)
+    {
+        $this->processors[] = $processor;
+    }
+
+    /**
+     * Add multiple processors to the crawler.
+     * Duplicate processors will be overridden by the new one.
+     *
+     * @param ProcessorInterface[] $processors The processors to add
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function addProcessors(array $processors)
+    {
+        Assert::allIsInstanceOf($processors, ProcessorInterface::class);
+        $this->processors = array_merge($this->processors, $processors);
+    }
+
+    /**
+     * Set the processor array directly.
+     *
+     * @param ProcessorInterface[] $processors The processors to set
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function setProcessors(array $processors)
+    {
+        Assert::allIsInstanceOf($processors, ProcessorInterface::class);
+        $this->processors = $processors;
     }
 }

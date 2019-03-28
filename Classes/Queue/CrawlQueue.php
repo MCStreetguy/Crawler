@@ -41,9 +41,7 @@ class CrawlQueue implements CrawlQueueInterface
         $this->clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function add(UriInterface $uri)
     {
         if ($this->has($uri)) {
@@ -53,17 +51,13 @@ class CrawlQueue implements CrawlQueueInterface
         $this->pending[] = $uri;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function has(UriInterface $uri): bool
     {
         return (in_array($uri, $this->pending) || in_array($uri, $this->finished));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function revoke(UriInterface $uri)
     {
         $index = array_search($uri, $this->pending);
@@ -75,74 +69,56 @@ class CrawlQueue implements CrawlQueueInterface
         unset($this->pending[$index]);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function hasNext(): bool
     {
         return (count($this->pending) > 0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getNext(): UriInterface
+    /** @inheritDoc */
+    public function getNext()
     {
-        return $this->pending[0];
+        return $this->hasNext() ? $this->pending[0] : null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function getAll(): array
     {
         return array_merge($this->finished, $this->pending);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function getAllPending(): array
     {
         return $this->pending;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function getAllFinished(): array
     {
         return $this->finished;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function clear()
     {
         $this->clearPending();
         $this->clearFinished();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function clearPending()
     {
         $this->pending = [];
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function clearFinished()
     {
         $this->finished = [];
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** @inheritDoc */
     public function finish(UriInterface $uri)
     {
         if (!in_array($uri, $this->pending)) {
