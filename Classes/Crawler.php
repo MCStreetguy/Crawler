@@ -27,6 +27,8 @@ use MCStreetguy\Crawler\Result\ResultSet;
 use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
 use GuzzleHttp\Psr7\Response;
 use MCStreetguy\Crawler\Miscellaneous\NullStream;
+use GuzzleHttp\Exception\RequestException;
+use MCStreetguy\Crawler\Exceptions\CrawlerException;
 
 /**
  * The main class of the web-crawler.
@@ -105,7 +107,9 @@ class Crawler
      *
      * @param string|UriInterface $target The target to crawl
      * @return ResultSet
-     * @throws \InvalidArgumentException
+     * @throws \InvalidArgumentException If a passed argument is invalid
+     * @throws \RuntimeException If an unexpected error happened
+     * @throws CrawlerException Any error occurred during the crawl
      */
     public function execute($target): ResultSet
     {
@@ -139,6 +143,12 @@ class Crawler
             } catch (ContentTooLargeException $e) {
                 $response = $response->withBody(new NullStream);
                 $furtherLinks = [];
+            } catch (RequestException $e) {
+                throw new CrawlerException(
+                    'Something went wrong while crawling the target!',
+                    1553788201087,
+                    $e
+                );
             }
 
             foreach ($furtherLinks as $linkUri) {
@@ -161,7 +171,7 @@ class Crawler
             
             $this->queue->finish($current);
 
-            if (++$crawlCount >= $this->configuration->getMaximumCrawlCount()) {
+            if ($this->validateMaximumCrawlCount(++$crawlCount)) {
                 break;
             }
 
@@ -184,6 +194,18 @@ class Crawler
         echo '----------------------------' . PHP_EOL . PHP_EOL;
 
         return $resultSet;
+    }
+
+    /**
+     * Validate if the current crawl count exceeds the maximum crawl count.
+     *
+     * @param int $current The current crawl count
+     * @return bool If the maximum crawl count has been exceeded
+     */
+    protected function validateMaximumCrawlCount(int $current)
+    {
+        $maximum = $this->configuration->getMaximumCrawlCount();
+        return ($maximum > 0 && $current > $maximum);
     }
 
     /**

@@ -90,7 +90,8 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
             'delay' => $this->getRequestDelay(),
             'synchronous' => true,
             // 'stream' => true,
-            // 'http_errors' => false,
+            'verify' => false,
+            'http_errors' => false,
             'headers' => ['X-Crawler-Request' => (string)Uuid::uuid4(),],
             'on_headers' => [$this, 'validateResponseSize'],
         ];
