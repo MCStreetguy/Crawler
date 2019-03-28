@@ -36,8 +36,11 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
     /** @var float The maximum response size. */
     protected $maxResponseSize = 5.243e+6;
 
-    /** @var float The  */
+    /** @var float The delay of each request */
     protected $requestDelay = 0.0;
+
+    /** @var int The timeout of each request */
+    protected $requestTimeout = 60;
 
     /** @inheritDoc */
     public function getMaximumCrawlCount(): int
@@ -83,17 +86,24 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
     }
 
     /** @inheritDoc */
+    public function getRequestTimeout(): int
+    {
+        return $this->requestTimeout;
+    }
+
+    /** @inheritDoc */
     public function buildGuzzleRequestOptions(): array
     {
         return [
             'allow_redirects' => true,
             'delay' => $this->getRequestDelay(),
-            'synchronous' => true,
-            // 'stream' => true,
-            'verify' => false,
-            'http_errors' => false,
             'headers' => ['X-Crawler-Request' => (string)Uuid::uuid4(),],
+            'http_errors' => false,
             'on_headers' => [$this, 'validateResponseSize'],
+            // 'stream' => true,
+            'synchronous' => true,
+            'timeout' => $this->getRequestTimeout(),
+            'verify' => false,
         ];
     }
 }

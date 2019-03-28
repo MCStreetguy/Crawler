@@ -25,7 +25,6 @@ use GuzzleHttp\Client;
 use MCStreetguy\Crawler\Result\CrawlResult;
 use MCStreetguy\Crawler\Result\ResultSet;
 use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
-use GuzzleHttp\Psr7\Response;
 use MCStreetguy\Crawler\Miscellaneous\NullStream;
 use GuzzleHttp\Exception\RequestException;
 use MCStreetguy\Crawler\Exceptions\CrawlerException;

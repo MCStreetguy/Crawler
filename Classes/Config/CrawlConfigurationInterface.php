@@ -60,6 +60,15 @@ interface CrawlConfigurationInterface
     public function getRequestDelay(): float;
 
     /**
+     * Get the timeout in seconds before aborting the request.
+     *
+     * Get the timeout in seconds before aborting the request.
+     *
+     * @return int
+     */
+    public function getRequestTimeout(): int;
+
+    /**
      * Build up the guzzle request options array.
      *
      * Build up the guzzle request options array.
