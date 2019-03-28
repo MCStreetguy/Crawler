@@ -20,7 +20,7 @@ use MCStreetguy\Crawler\Queue\CrawlQueue;
 use GuzzleHttp\Psr7\Uri;
 use Webmozart\Assert\Assert;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
-use MCStreetguy\Crawler\Processing\Validator\ValidatorInterface;
+use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
 use GuzzleHttp\Client;
 use MCStreetguy\Crawler\Result\CrawlResult;
 use MCStreetguy\Crawler\Result\ResultSet;

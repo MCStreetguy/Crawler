@@ -10,7 +10,7 @@
  * @version    SVN: $Id$
  */
 
-namespace MCStreetguy\Crawler\Processing\Validator;
+namespace MCStreetguy\Crawler\Processing\Validation;
 
 use Psr\Http\Message\UriInterface;
 
