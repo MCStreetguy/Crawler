@@ -100,4 +100,25 @@ class CrawlResult
     {
         return $this->links;
     }
+
+    /**
+     * Check if the bound request was successful.
+     *
+     * @return bool
+     */
+    public function success()
+    {
+        $status = $this->response->getStatusCode();
+        return ($status >= 200) && ($status < 300);
+    }
+
+    /**
+     * Check if the bound request was a failure.
+     *
+     * @return bool
+     */
+    public function failed()
+    {
+        return !$this->success();
+    }
 }

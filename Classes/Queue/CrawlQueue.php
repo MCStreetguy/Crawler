@@ -44,7 +44,7 @@ class CrawlQueue implements CrawlQueueInterface
     /** @inheritDoc */
     public function add(UriInterface $uri)
     {
-        if ($this->has($uri)) {
+        if ($this->hasAny($uri)) {
             return;
         }
 
@@ -53,6 +53,12 @@ class CrawlQueue implements CrawlQueueInterface
 
     /** @inheritDoc */
     public function has(UriInterface $uri): bool
+    {
+        return in_array($uri, $this->pending);
+    }
+
+    /** @inheritDoc */
+    public function hasAny(UriInterface $uri): bool
     {
         return (in_array($uri, $this->pending) || in_array($uri, $this->finished));
     }
@@ -78,7 +84,7 @@ class CrawlQueue implements CrawlQueueInterface
     /** @inheritDoc */
     public function getNext()
     {
-        return $this->hasNext() ? $this->pending[0] : null;
+        return $this->hasNext() ? array_pop(array_reverse($this->pending)) : null;
     }
 
     /** @inheritDoc */
@@ -121,7 +127,7 @@ class CrawlQueue implements CrawlQueueInterface
     /** @inheritDoc */
     public function finish(UriInterface $uri)
     {
-        if (!in_array($uri, $this->pending)) {
+        if (!$this->has($uri)) {
             return;
         }
 

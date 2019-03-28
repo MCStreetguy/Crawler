@@ -14,6 +14,7 @@ namespace MCStreetguy\Crawler\Processing;
 
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
+use MCStreetguy\Crawler\Result\CrawlResult;
 
 /**
  * A standard interface for processor classes.
@@ -29,9 +30,8 @@ interface ProcessorInterface
     /**
      * Invoke this processor.
      *
-     * @param UriInterface $uri The uri that has been processed
-     * @param ResponseInterface $response The response of the request to the processed uri
+     * @param CrawlResult $result The crawl result to process
      * @return void
      */
-    public function invoke(UriInterface $uri, ResponseInterface $response);
+    public function invoke(CrawlResult $result);
 }

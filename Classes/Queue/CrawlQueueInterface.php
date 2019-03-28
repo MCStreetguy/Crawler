@@ -42,6 +42,14 @@ interface CrawlQueueInterface
     public function has(UriInterface $uri): bool;
 
     /**
+     * Check if the given uri is already in the queue, ignoring if it is finished already.
+     *
+     * @param UriInterface $uri The uri to check for
+     * @return bool If the uri has been found
+     */
+    public function hasAny(UriInterface $uri): bool;
+
+    /**
      * Revoke the given uri from the queue if possible.
      *
      * @param UriInterface $uri The uri to revoke

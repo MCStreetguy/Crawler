@@ -94,17 +94,17 @@ class Crawler
         $this->validators = $validators;
 
         $this->seeker = new Seeker();
-        $this->client = new Client();
+        $this->client = new Client($config->buildGuzzleRequestOptions());
     }
 
     /**
      * Execute the crawler for the given target.
      *
      * @param string|UriInterface $target The target to crawl
-     * @return void
+     * @return ResultSet
      * @throws \InvalidArgumentException
      */
-    public function execute($target)
+    public function execute($target): ResultSet
     {
         if (is_string($target)) {
             $target = new Uri($target);
@@ -118,29 +118,65 @@ class Crawler
         }
 
         $this->target = $target;
-        $this->queue->add($target);
+        // $this->queue->add($target);
 
         $results = [];
-        $current = $this->queue->getNext();
+        $current = $target;
+        // $current = $this->queue->getNext();
 
         if ($current === null) {
             throw new \RuntimeException('Something went wrong while starting the crawling process!', 1553774441674);
         }
 
         do {
-            $response = $this->client->request('GET', $current, $this->configuration->buildGuzzleRequestOptions());
-            
+            $response = $this->client->get($current);
             $furtherLinks = $this->seeker->browse($current, $response);
-            $uniqueLinks = array_unique($furtherLinks, SORT_NATURAL);
 
-            $result = new CrawlResult($current, $response, $furtherLinks);
+            foreach ($furtherLinks as $linkUri) {
+                $isValid = true;
+
+                foreach ($this->validators as $validator) {
+                    $isValid = $isValid && $validator->isValid($linkUri);
+                }
+                
+                if ($isValid === true) {
+                    $this->queue->add($linkUri);
+                }
+            }
+
+            $results[] = $result = new CrawlResult($current, $response, $furtherLinks);
+            
+            foreach ($this->processors as $processor) {
+                $processor->invoke($result);
+            }
+
+            \Kint::dump($this->queue->getAllPending(), $this->queue->hasNext(), $this->queue->getNext());
+            
             $this->queue->finish($current);
-
-            $results[] = $result;
             $current = $this->queue->getNext();
+
+            \Kint::dump($this->queue->getAllPending(), $this->queue->hasNext(), $this->queue->getNext());
+
+            \Kint::dump($current);
         } while ($current !== null);
 
         $resultSet = new ResultSet($results);
+
+        // \Kint::dump($resultSet);
+        echo PHP_EOL . '----------------------------' . PHP_EOL;
+        foreach ($resultSet as $result) {
+            echo (string)$result->getUri() . ': ';
+            if ($result->success()) {
+                echo 'success, ';
+                echo count($result->getLinks()) . ' links found';
+            } else {
+                echo 'failed';
+            }
+            echo PHP_EOL;
+        }
+        echo '----------------------------' . PHP_EOL . PHP_EOL;
+
+        return $resultSet;
     }
 
     /**
