@@ -24,6 +24,7 @@ use Psr\Http\Message\ResponseInterface;
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
+ * @api
  */
 class CrawlResult
 {

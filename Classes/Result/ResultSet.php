@@ -25,6 +25,7 @@ use Tree\Node\Node;
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
+ * @api
  */
 class ResultSet implements \Iterator
 {
@@ -161,6 +162,7 @@ class ResultSet implements \Iterator
      *
      * @return CrawlResult
      * @link http://php.net/manual/en/iterator.current.php
+     * @internal
      */
     public function current()
     {
@@ -174,6 +176,7 @@ class ResultSet implements \Iterator
      *
      * @return int
      * @link http://php.net/manual/en/iterator.key.php
+     * @internal
      */
     public function key()
     {
@@ -187,6 +190,7 @@ class ResultSet implements \Iterator
      *
      * @return void
      * @link http://php.net/manual/en/iterator.next.php
+     * @internal
      */
     public function next()
     {
@@ -200,6 +204,7 @@ class ResultSet implements \Iterator
      *
      * @return void
      * @link http://php.net/manual/en/iterator.rewind.php
+     * @internal
      */
     public function rewind()
     {
@@ -213,6 +218,7 @@ class ResultSet implements \Iterator
      *
      * @return bool
      * @link http://php.net/manual/en/iterator.valid.php
+     * @internal
      */
     public function valid()
     {

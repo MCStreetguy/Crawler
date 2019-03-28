@@ -37,6 +37,7 @@ use MCStreetguy\Crawler\Exceptions\CrawlerException;
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
+ * @api
  */
 class Crawler
 {

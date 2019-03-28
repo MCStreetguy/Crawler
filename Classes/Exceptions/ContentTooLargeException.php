@@ -21,6 +21,7 @@ namespace MCStreetguy\Crawler\Exceptions;
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
+ * @internal
  */
 class ContentTooLargeException extends CrawlerException
 {

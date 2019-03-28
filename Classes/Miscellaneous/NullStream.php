@@ -27,6 +27,7 @@ use Psr\Http\Message\StreamInterface;
  * @license    https://github.com/MCStreetguy/Crawler/blob/master/LICENSE MIT
  * @package    mcstreetguy/crawler
  * @since      always
+ * @internal
  */
 class NullStream implements StreamInterface
 {

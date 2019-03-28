@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "034a2711260ce280e6099ea946f53858",
+    "content-hash": "7ef4e84a2218eef16c1e681dc7649494",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -799,49 +799,6 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
-            "name": "cvuorinen/phpdoc-markdown-public",
-            "version": "0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cvuorinen/phpdoc-markdown-public.git",
-                "reference": "c6751725aa8a26514992080f25d024c06beab71a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cvuorinen/phpdoc-markdown-public/zipball/c6751725aa8a26514992080f25d024c06beab71a",
-                "reference": "c6751725aa8a26514992080f25d024c06beab71a",
-                "shasum": ""
-            },
-            "require": {
-                "phpdocumentor/phpdocumentor": "~2.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Cvuorinen\\PhpdocMarkdownPublic\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Carl Vuorinen",
-                    "email": "carl.vuorinen@gmail.com"
-                }
-            ],
-            "description": "phpDocumentor template that generates Markdown documentation of the public API",
-            "homepage": "https://github.com/cvuorinen/phpdoc-markdown-public",
-            "keywords": [
-                "documentation",
-                "markdown",
-                "phpDocumentor",
-                "phpdoc"
-            ],
-            "time": "2018-01-03T08:46:38+00:00"
-        },
-        {
             "name": "doctrine/annotations",
             "version": "v1.6.0",
             "source": {
@@ -1536,6 +1493,52 @@
                 "php"
             ],
             "time": "2019-03-20T20:19:15+00:00"
+        },
+        {
+            "name": "mcstreetguy/phpdoc-markdown-public",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MCStreetguy/phpdoc-markdown-public.git",
+                "reference": "79cd0a45eb7e9efd675d1db173f436b25b7d9617"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MCStreetguy/phpdoc-markdown-public/zipball/79cd0a45eb7e9efd675d1db173f436b25b7d9617",
+                "reference": "79cd0a45eb7e9efd675d1db173f436b25b7d9617",
+                "shasum": ""
+            },
+            "require": {
+                "phpdocumentor/phpdocumentor": "~2.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Cvuorinen\\PhpdocMarkdownPublic\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carl Vuorinen",
+                    "email": "carl.vuorinen@gmail.com"
+                },
+                {
+                    "name": "Max Schmidt",
+                    "email": "maximilianschmidt404@gmail.com"
+                }
+            ],
+            "description": "phpDocumentor template that generates Markdown documentation of the public API",
+            "keywords": [
+                "documentation",
+                "markdown",
+                "phpDocumentor",
+                "phpdoc"
+            ],
+            "time": "2019-03-28T20:33:54+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3733,7 +3736,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "mcstreetguy/phpdoc-markdown-public": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
