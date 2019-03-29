@@ -65,17 +65,17 @@ $crawler->execute('http://example.com/');
 
 Copying the above parts together into a script file and executing it on the command line now produces the following output:
 
-> machine:~ testuser$ php test.php
-> Crawled: http://example.com/
-> Crawled: http://www.iana.org/domains/example
-> Crawled: http://www.iana.org/_css/2015.1/screen.css
-> Crawled: http://www.iana.org/_css/2015.1/print.css
-> Crawled: http://www.iana.org/_img/bookmark_icon.ico
-> Crawled: http://www.iana.org/
-> Crawled: http://www.iana.org/domains
-> Crawled: http://www.iana.org/numbers
-> ^C
-> machine:~ testuser$
+> machine:~ testuser$ php test.php  
+> Crawled: http://example.com/  
+> Crawled: http://www.iana.org/domains/example  
+> Crawled: http://www.iana.org/_css/2015.1/screen.css  
+> Crawled: http://www.iana.org/_css/2015.1/print.css  
+> Crawled: http://www.iana.org/_img/bookmark_icon.ico  
+> Crawled: http://www.iana.org/  
+> Crawled: http://www.iana.org/domains  
+> Crawled: http://www.iana.org/numbers  
+> ^C  
+> machine:~ testuser$  
 
 _Wait! Why is this even working?_
 
@@ -116,9 +116,9 @@ If we now add this validator to our crawler before invocation, it should stop im
 $crawler->addValidator(new DebugValidator('http://example.com/'));
 ```
 
-> machine:~ testuser$ php test.php
-> Crawled: http://example.com/
-> machine:~ testuser$
+> machine:~ testuser$ php test.php  
+> Crawled: http://example.com/  
+> machine:~ testuser$  
 
 ### Summary
 
