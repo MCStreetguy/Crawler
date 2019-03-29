@@ -3,10 +3,10 @@
 **A highly configurable, modern web crawler for PHP.**
 
 This library provides a very dynamic environment for all kinds of tasks based on recursive browsing of web pages.
-Internally, [Guzzle](http://guzzlephp.org) is used to send requests, and [paquettg's HTML parser](https://github.com/paquettg/php-html-parser) to search server responses for follow-up links.
+Internally, [Guzzle](http://guzzlephp.org) is used to send requests, and [paquettg's HTML parser](https://github.com/paquettg/php-html-parser) to search server responses for follow-up links.  
 The rest of the crawl process is entirely up to you. Apart from the initial configuration of the crawler, this library relies solely on user-defined classes, for example, to check whether a link should be crawled at all or to process the server's response.
 These classes are only very roughly pre-defined by interfaces, but usually these only require one function that is used to invoke them.
-The crawler does not care about the inner workings of these classes, in case of a processor it doesn't even require any return value.
+The crawler does not care about the inner workings of these classes, in case of a processor it doesn't even require any return value.  
 Due to this conception the library should be able to be integrated almost seamlessly into most frameworks.
 
 ## Installation
@@ -88,8 +88,8 @@ But is that intentional behavior? Not necessarily, but we have a solution for th
 
 To prevent our crawler from happily jumping across webpages and discovering the whole internet we need another custom class: a validator.
 A validator works nearly the same as a processor, but it's invoked far earlier in the process loop.
-It get's the pending uri handed over as argument and is expected to return a boolean value, indicating if the uri shall be crawled.
-You may define as may validators as you like so you can split complex decisions up in several parts, but keep in mind that this works like a blacklist (i.e. if one validator returns false, the uri is dropped immediately).
+It get's the pending uri handed over as argument and is expected to return a boolean value, indicating if the uri shall be crawled.  
+You may define as many validators as you like so you can split complex decisions up in several parts, but keep in mind that this works like a blacklist (i.e. if one validator returns false, the uri is dropped immediately).
 
 ``` php
 use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
