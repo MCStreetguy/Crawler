@@ -124,3 +124,104 @@ $crawler->addValidator(new DebugValidator('http://example.com/'));
 
 The basic usage of this library shall be clear at this point.
 Have a close look on the documentation, the source code and the `Tests/` folder for more information and some more advanced examples.
+
+## Reference
+
+### Configuration
+
+The crawler can be configured through a configuration class.
+
+(_to be written_)
+
+### Validators
+
+This package ships with several predefined validators that are commonly used.
+
+#### RobotsTxtValidator
+
+This validator loads the `robots.txt` from the server to be accessed and matches received uris against these restrictions.
+It returns false only if access to the uri is forbidden by these restrictions.
+If no `robots.txt`-file could be loaded all uris are considered valid.
+
+See http://www.robotstxt.org/ for more information on `robots.txt`-files.
+
+##### Usage
+
+This validator is not meant to be used directly.
+Instead enable it by setting the `$ignoreRobots` property in your configuration.  
+(see the section above for more information)
+
+#### DomainWhitelistValidator
+
+This validator only allows uris, that are on exactly the same domain as the base uri used to start the crawl.
+
+##### Example
+
+If `http://www.example.com/` was our base uri to crawl, the following uris would be considered valid:
+
+- `http://www.example.com/some-page.html`
+- `http://www.example.com/assets/img/my-cool-image.jpg`
+- `https://www.example.com/`
+- `https://www.example.com/#section`
+- `https://www.example.com/?q=somequery`
+
+Counterwise to the before examples, the following will be considered invalid:
+
+- `http://example.com/`
+- `http://subdomain.example.com/`
+- `http://www.google.com/`
+
+##### Usage
+
+To make use of this validator, create an instance of it and add it to the crawler:
+
+``` php
+use MCStreetguy\Crawler\Processing\Validation\Core\DomainWhitelistValidator;
+
+$baseUri = 'http://www.example.com/';
+$domainValidator = new DomainWhitelistValidator($baseUri);
+
+$crawler->addValidator($domainValidator);
+```
+
+#### SubDomainWhitelistValidator
+
+This validator only allows uris, that are on exactly the same domain as the base uri used to start the crawl, or at least on a subdomain of it.
+
+**Please note** that the `www.` preceding most urls is considered not to be part of the domain (in contrast to RFC regulations).
+This is due to the fact, that most pages use it as a scheme-designator, even though it's actually a subdomain.
+It get's removed from the base uri for host comparison, if it is present.  
+This has no reductive effect on uri filtering, instead it enhances the probability that the crawler validates all subdomains properly.
+
+##### Example
+
+If `http://www.example.com/` was our base uri to crawl, the following uris would be considered valid:
+
+- `http://www.example.com/some-page.html`
+- `http://www.example.com/assets/img/my-cool-image.jpg`
+- `https://www.example.com/`
+- `https://www.example.com/#section`
+- `https://www.example.com/?q=somequery`
+- `https://subdomain.www.example.com/`
+- `https://another.subdomain.www.example.com/`
+- `https://sub.www.example.com/my/path`
+
+Counterwise to the before examples, the following will be considered invalid:
+
+- `http://example.com/`
+- `http://subdomain.example.com/`
+- `http://www.subdomain.example.com/`
+- `http://www.google.com/`
+
+##### Usage
+
+To make use of this validator, create an instance of it and add it to the crawler (as with the `DomainWhitelistValidator` before):
+
+``` php
+use MCStreetguy\Crawler\Processing\Validation\Core\SubDomainWhitelistValidator;
+
+$baseUri = 'http://www.example.com/';
+$subdomainValidator = new SubDomainWhitelistValidator($baseUri);
+
+$crawler->addValidator($subdomainValidator);
+```
