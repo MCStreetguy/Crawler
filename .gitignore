@@ -1,3 +1,4 @@
 /vendor/
-/Docs/cache/
-/Docs/html/
+/Docs/
+# /Docs/cache/
+# /Docs/html/
