@@ -17,6 +17,8 @@ use Psr\Http\Message\ResponseInterface;
 use PHPHtmlParser\Dom;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
+use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * The seeker class is responsible for searching links within response bodies.
@@ -30,6 +32,18 @@ use Psr\Http\Message\UriInterface;
  */
 class Seeker
 {
+    /** @var ValidatorInterface[] The registered validators */
+    protected $validators;
+
+    public function __construct(array $validators = [])
+    {
+        if (!empty($validators)) {
+            Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        }
+
+        $this->validators = $validators;
+    }
+
     /**
      * Browse the given input for further links.
      *
@@ -38,7 +52,7 @@ class Seeker
      * @return UriInterface[]
      * @throws \InvalidArgumentException
      */
-    public function browse(UriInterface $uri, $input)
+    public function browse(UriInterface $uri, $input, bool $ignoreValidation = false)
     {
         if ($input instanceof ResponseInterface) {
             $body = $input->getBody();
@@ -74,9 +88,65 @@ class Seeker
                 $link = Uri::resolve($uri, $link);
             }
 
-            $links[] = $link;
+            $isValid = true;
+
+            foreach ($this->validators as $validator) {
+                $isValid = $isValid && $validator->isValid($link);
+            }
+
+            if ($isValid || $ignoreValidation) {
+                $links[] = $link;
+            }
         }
 
         return $links;
+    }
+
+    /**
+     * Get the registered validators.
+     *
+     * @return ValidatorInterface[]
+     */
+    public function getValidators()
+    {
+        return $this->validators;
+    }
+
+    /**
+     * Add a validator instance to the crawler.
+     *
+     * @param ValidatorInterface $validator The validator to add
+     * @return void
+     */
+    public function addValidator(ValidatorInterface $validator)
+    {
+        $this->validators[] = $validator;
+    }
+
+    /**
+     * Add multiple validators to the crawler.
+     * Duplicate validators will be overridden by the new one.
+     *
+     * @param ValidatorInterface[] $validators The validators to add
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function addValidators(array $validators)
+    {
+        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        $this->validators = array_merge($this->validators, $validators);
+    }
+
+    /**
+     * Set the validator array directly.
+     *
+     * @param ValidatorInterface[] $validators The validators to set
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    public function setValidators(array $validators)
+    {
+        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
+        $this->validators = $validators;
     }
 }

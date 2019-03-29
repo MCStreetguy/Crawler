@@ -43,6 +43,9 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
     /** @var int The timeout of each request */
     protected $requestTimeout = 60;
 
+    /** @var bool If robots.txt is ignored */
+    protected $ignoreRobots = false;
+
     /** @inheritDoc */
     public function getMaximumCrawlCount(): int
     {
@@ -61,25 +64,6 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
         return $this->maxResponseSize;
     }
 
-    /**
-     * Validate the given response in terms of content size.
-     *
-     * Validate the given response in terms of content size.
-     *
-     * @param ResponseInterface $response
-     * @return void
-     * @throws ContentTooLargeException
-     */
-    public function validateResponseSize(ResponseInterface $response)
-    {
-        $maximum = $this->getMaximumResponseSize();
-        $actual = floatval($response->getHeader('Content-Length')['value']);
-
-        if ($actual > $maximum) {
-            throw ContentTooLargeException::forSize($maximum, $actual);
-        }
-    }
-
     /** @inheritDoc */
     public function getRequestDelay(): float
     {
@@ -93,18 +77,8 @@ class DefaultCrawlConfiguration implements CrawlConfigurationInterface
     }
 
     /** @inheritDoc */
-    public function buildGuzzleRequestOptions(): array
+    public function isRobotsTxtIgnored(): bool
     {
-        return [
-            'allow_redirects' => true,
-            'delay' => $this->getRequestDelay(),
-            'headers' => ['X-Crawler-Request' => (string)Uuid::uuid4(),],
-            'http_errors' => false,
-            'on_headers' => [$this, 'validateResponseSize'],
-            // 'stream' => true,
-            'synchronous' => true,
-            'timeout' => $this->getRequestTimeout(),
-            'verify' => false,
-        ];
+        return $this->ignoreRobots;
     }
 }

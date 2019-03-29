@@ -70,11 +70,11 @@ interface CrawlConfigurationInterface
     public function getRequestTimeout(): int;
 
     /**
-     * Build up the guzzle request options array.
+     * Get if the crawler should ignore the specifications of the robots.txt
      *
-     * Build up the guzzle request options array.
+     * Get if the crawler should ignore the specifications of the robots.txt
      *
-     * @return array
+     * @return bool
      */
-    public function buildGuzzleRequestOptions(): array;
+    public function isRobotsTxtIgnored(): bool;
 }

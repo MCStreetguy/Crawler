@@ -28,6 +28,9 @@ use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
 use MCStreetguy\Crawler\Miscellaneous\NullStream;
 use GuzzleHttp\Exception\RequestException;
 use MCStreetguy\Crawler\Exceptions\CrawlerException;
+use Psr\Http\Message\ResponseInterface;
+use Ramsey\Uuid\Uuid;
+use MCStreetguy\Crawler\Processing\Validation\Core\RobotsTxtValidator;
 
 /**
  * The main class of the web-crawler.
@@ -41,8 +44,7 @@ use MCStreetguy\Crawler\Exceptions\CrawlerException;
  */
 class Crawler
 {
-    /** @var UriInterface The target url to crawl. */
-    protected $target;
+    const USER_AGENT = 'MCStreetguy-Crawler/1.0';
 
     /** @var CrawlConfigurationInterface The crawler configuration object. */
     protected $configuration;
@@ -55,12 +57,12 @@ class Crawler
 
     /** @var ProcessorInterface[] The registered processors */
     protected $processors;
-    
-    /** @var ValidatorInterface[] The registered validators */
-    protected $validators;
 
     /** @var Client The http client */
     protected $client;
+
+    /** @var UriInterface|null The target url to crawl. */
+    protected $target;
 
     /**
      * Constructs a new instance.
@@ -81,25 +83,41 @@ class Crawler
         if ($config === null) {
             $config = new DefaultCrawlConfiguration;
         }
-        $this->configuration = $config;
         
         if ($queue === null) {
             $queue = new CrawlQueue;
         }
-        $this->queue = $queue;
-
+                
         if (!empty($processors)) {
             Assert::allIsInstanceOf($processors, ProcessorInterface::class);
         }
-        $this->processors = $processors;
 
         if (!empty($validators)) {
             Assert::allIsInstanceOf($validators, ValidatorInterface::class);
         }
-        $this->validators = $validators;
+        
+        $this->configuration = $config;
+        $this->queue = $queue;
+        $this->processors = $processors;
+        
+        $this->seeker = new Seeker($validators);
+        $this->client = new Client([
+            'allow_redirects' => true,
+            'delay' => $this->configuration->getRequestDelay(),
+            'headers' => [
+                'User-Agent' => self::USER_AGENT,
+                'X-Crawler-Request' => (string) Uuid::uuid4(),
+            ],
+            'http_errors' => false,
+            'on_headers' => [$this, 'validateResponseSize'],
+            // 'stream' => true,
+            'synchronous' => true,
+            'timeout' => $this->configuration->getRequestTimeout(),
+            'verify' => false,
+        ]);
 
-        $this->seeker = new Seeker();
-        $this->client = new Client($config->buildGuzzleRequestOptions());
+        # explicitly set null values
+        $this->target = null;
     }
 
     /**
@@ -126,6 +144,10 @@ class Crawler
 
         $this->target = $target;
         $this->queue->add($target);
+
+        if (!$this->configuration->isRobotsTxtIgnored()) {
+            $this->seeker->addValidator(new RobotsTxtValidator($target));
+        }
 
         $results = [];
         // $current = $target;
@@ -180,25 +202,13 @@ class Crawler
 
         $resultSet = new ResultSet($results);
 
-        echo PHP_EOL . '----------------------------' . PHP_EOL;
-        foreach ($resultSet as $result) {
-            echo (string)$result->getUri() . ': ';
-            if ($result->success()) {
-                echo 'success, ';
-                echo count($result->getLinks()) . ' links found';
-            } else {
-                echo 'failed';
-            }
-            echo PHP_EOL;
-        }
-        echo '----------------------------' . PHP_EOL . PHP_EOL;
-
         return $resultSet;
     }
 
     /**
      * Validate if the current crawl count exceeds the maximum crawl count.
      *
+     * @internal
      * @param int $current The current crawl count
      * @return bool If the maximum crawl count has been exceeded
      */
@@ -207,6 +217,59 @@ class Crawler
         $maximum = $this->configuration->getMaximumCrawlCount();
         return ($maximum > 0 && $current > $maximum);
     }
+
+    /**
+     * Validate the given response in terms of content size.
+     *
+     * @internal
+     * @param ResponseInterface $response
+     * @return void
+     * @throws ContentTooLargeException
+     */
+    public function validateResponseSize(ResponseInterface $response)
+    {
+        $maximum = $this->configuration->getMaximumResponseSize();
+        $actual = floatval($response->getHeader('Content-Length')['value']);
+
+        if ($actual > $maximum) {
+            throw ContentTooLargeException::forSize($maximum, $actual);
+        }
+    }
+
+    /**
+     * Load the coresponding robots.txt file from the target uri.
+     *
+     * @internal
+     * @return void
+     */
+    protected function loadRobotsTxt()
+    {
+        if ($this->target === null) {
+            return;
+        }
+
+        $robotsUri = $this->target->withPath('/robots.txt')->withQuery('')->withFragment('');
+        $response = $this->client->get((string) $robotsUri, [
+            'allow_redirects' => true,
+            'http_errors' => false,
+        ]);
+
+        $statusCode = $response->getStatusCode();
+
+        if ($statusCode < 200 || $statusCode >= 300) {
+            $restrictions = '';
+        } else {
+            $restrictions = (string) $response->getBody();
+        }
+
+        $parser = new \RobotsTxtParser($restrictions);
+        $parser->setHttpStatusCode($response->getStatusCode());
+        $parser->setUserAgent(self::USER_AGENT);
+
+        $this->robots = $parser;
+    }
+
+    # Getters and setters
 
     /**
      * Get the base target uri of the crawler.
@@ -315,7 +378,7 @@ class Crawler
      */
     public function getValidators()
     {
-        return $this->validators;
+        return $this->seeker->getValidators();
     }
 
     /**
@@ -326,7 +389,7 @@ class Crawler
      */
     public function addValidator(ValidatorInterface $validator)
     {
-        $this->validators[] = $validator;
+        return $this->seeker->addValidator($validator);
     }
 
     /**
@@ -339,8 +402,7 @@ class Crawler
      */
     public function addValidators(array $validators)
     {
-        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
-        $this->validators = array_merge($this->validators, $validators);
+        return $this->seeker->addValidators($validators);
     }
 
     /**
@@ -352,7 +414,6 @@ class Crawler
      */
     public function setValidators(array $validators)
     {
-        Assert::allIsInstanceOf($validators, ValidatorInterface::class);
-        $this->validators = $validators;
+        return $this->seeker->setValidators($validators);
     }
 }
