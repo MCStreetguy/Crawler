@@ -13,7 +13,7 @@
 
 namespace MCStreetguy\Crawler\Processing\Validation\Core;
 
-use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
+use MCStreetguy\Crawler\Processing\Validation\AbstractValidator;
 use Psr\Http\Message\UriInterface;
 use MCStreetguy\Crawler\Crawler;
 use GuzzleHttp\Client;

@@ -162,6 +162,8 @@ class Crawler
             try {
                 $response = $this->client->get($current);
                 $furtherLinks = $this->seeker->browse($current, $response);
+
+                $this->queue->addAll($furtherLinks);
             } catch (ContentTooLargeException $e) {
                 $response = $response->withBody(new NullStream);
                 $furtherLinks = [];
@@ -171,18 +173,6 @@ class Crawler
                     1553788201087,
                     $e
                 );
-            }
-
-            foreach ($furtherLinks as $linkUri) {
-                $isValid = true;
-
-                foreach ($this->validators as $validator) {
-                    $isValid = $isValid && $validator->isValid($linkUri);
-                }
-                
-                if ($isValid === true) {
-                    $this->queue->add($linkUri);
-                }
             }
 
             $results[] = $result = new CrawlResult($current, $response, $furtherLinks);

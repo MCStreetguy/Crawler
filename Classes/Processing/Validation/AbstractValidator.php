@@ -11,7 +11,7 @@
  * @version    SVN: $Id$
  */
 
-namespace MCStreetguy\Crawler\Processing\Validation\Core;
+namespace MCStreetguy\Crawler\Processing\Validation;
 
 use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
 use Psr\Http\Message\UriInterface;

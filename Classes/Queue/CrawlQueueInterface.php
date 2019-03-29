@@ -37,6 +37,16 @@ interface CrawlQueueInterface
     public function add(UriInterface $uri);
 
     /**
+     * Adds multiple uris at once to the queue.
+     *
+     * Adds multiple uris at once to the queue.
+     *
+     * @param UriInterface[] $uris The uris to add
+     * @return void
+     */
+    public function addAll(array $uris);
+
+    /**
      * Check if the given uri is already in the queue.
      *
      * Check if the given uri is already in the queue.

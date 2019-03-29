@@ -105,7 +105,7 @@ class DebugValidator implements ValidatorInterface
 
     public function isValid(\Psr\Http\Message\UriInterface $target)
     {
-        return (substr_compare((string) $target, $this->baseUri, 0) === 0);
+        return (substr_compare((string) $target, $this->baseUri, 0, strlen($this->baseUri)) === 0);
     }
 }
 ```

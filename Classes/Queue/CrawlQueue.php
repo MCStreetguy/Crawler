@@ -13,6 +13,7 @@
 namespace MCStreetguy\Crawler\Queue;
 
 use Psr\Http\Message\UriInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * The default crawl queue.
@@ -52,6 +53,16 @@ class CrawlQueue implements CrawlQueueInterface
         }
 
         $this->pending[] = $uri;
+    }
+
+    /** @inheritDoc */
+    public function addAll(array $uris)
+    {
+        Assert::allIsInstanceOf($uris, UriInterface::class);
+
+        foreach ($uris as $uri) {
+            $this->add($uri);
+        }
     }
 
     /** @inheritDoc */
