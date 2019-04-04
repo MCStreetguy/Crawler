@@ -9,6 +9,13 @@ These classes are only very roughly pre-defined by interfaces, but usually these
 The crawler does not care about the inner workings of these classes, in case of a processor it doesn't even require any return value.  
 Due to this conception the library should be able to be integrated almost seamlessly into most frameworks.
 
+**TOC:**
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Reference](#reference)
+  - [Configuration](#configuration)
+  - [Validators](#validators)
+
 ## Installation
 
 Require the library through Composer:
@@ -137,7 +144,7 @@ The crawler can be configured through a configuration class.
 
 This package ships with several predefined validators that are commonly used.
 
-#### RobotsTxtValidator
+#### `RobotsTxtValidator`
 
 This validator loads the `robots.txt` from the server to be accessed and matches received uris against these restrictions.
 It returns false only if access to the uri is forbidden by these restrictions.
@@ -151,7 +158,7 @@ This validator is not meant to be used directly.
 Instead enable it by setting the `$ignoreRobots` property in your configuration.  
 (see the section above for more information)
 
-#### DomainWhitelistValidator
+#### `DomainWhitelistValidator`
 
 This validator only allows uris, that are on exactly the same domain as the base uri used to start the crawl.
 
@@ -184,7 +191,7 @@ $domainValidator = new DomainWhitelistValidator($baseUri);
 $crawler->addValidator($domainValidator);
 ```
 
-#### SubDomainWhitelistValidator
+#### `SubDomainWhitelistValidator`
 
 This validator only allows uris, that are on exactly the same domain as the base uri used to start the crawl, or at least on a subdomain of it.
 
