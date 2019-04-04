@@ -44,6 +44,7 @@ use GuzzleHttp\TransferStats;
 class Crawler
 {
     const USER_AGENT = 'MCStreetguy-Crawler/1.0';
+    const USER_AGENT_STRING = 'MCStreetguy-Crawler/1.0';
 
     /** @var CrawlConfigurationInterface The crawler configuration object. */
     protected $configuration;
@@ -110,7 +111,7 @@ class Crawler
             ],
             'delay' => $this->configuration->getRequestDelay(),
             'headers' => [
-                'User-Agent' => self::USER_AGENT,
+                'User-Agent' => self::USER_AGENT_STRING,
                 'X-Crawler-Request' => (string) Uuid::uuid4(),
             ],
             'http_errors' => false,

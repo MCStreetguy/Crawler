@@ -16,6 +16,7 @@ use Tree\Node\Node;
 use Tree\Node\NodeInterface;
 use Webmozart\Assert\Assert;
 use Psr\Http\Message\UriInterface;
+use Tree\Builder\NodeBuilder;
 
 /**
  * A set of CrawlResult objects.
@@ -152,6 +153,24 @@ class ResultSet implements \Iterator
     }
 
     /**
+     * Find one result by it's corresponding uri.
+     *
+     * Find one result by it's corresponding uri.
+     *
+     * @return CrawlResult|null
+     */
+    public function findByUri(UriInterface $uri)
+    {
+        foreach ($this->contents as $result) {
+            if ($result->getUri() === $uri) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Convert this ResultSet to a Node tree structure.
      *
      * Convert this ResultSet to a Node tree structure.
@@ -173,8 +192,8 @@ class ResultSet implements \Iterator
             throw new \RuntimeException('Cannot determine root node of crawl!', 1554402649187);
         }
 
-        $rootNode = new Node($rootResult->getUri());
-        // $tree = new NodeBuilder($rootNode);
+        $rootNode = new Node((string) $rootResult->getUri());
+        $tree = new NodeBuilder($rootNode);
 
         return $rootNode;
     }
