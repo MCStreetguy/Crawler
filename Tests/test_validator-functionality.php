@@ -1,12 +1,12 @@
 <?php
 include '../vendor/autoload.php';
 
+use GuzzleHttp\Psr7\Uri;
 use MCStreetguy\Crawler\Crawler;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
-use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
-use GuzzleHttp\Psr7\Uri;
-use MCStreetguy\Crawler\Processing\Validation\Core\SubDomainWhitelistValidator;
 use MCStreetguy\Crawler\Processing\Validation\Core\DomainWhitelistValidator;
+use MCStreetguy\Crawler\Processing\Validation\Core\SubDomainWhitelistValidator;
+use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
 
 $uri1 = new Uri('http://www.obis-concept.de/');
 $uri2 = new Uri('http://deploy.obis-concept.de/');
@@ -25,7 +25,6 @@ $test2 = new SubDomainWhitelistValidator($uri3);
 \Kint::dump($test2->isValid($uri1));
 \Kint::dump($test2->isValid($uri2));
 \Kint::dump($test2->isValid($uri4));
-
 
 $test3 = new DomainWhitelistValidator($uri1);
 \Kint::dump($test3->isValid($uri1));

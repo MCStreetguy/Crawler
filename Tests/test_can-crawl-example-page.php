@@ -9,7 +9,7 @@ class DebugProcessor implements ProcessorInterface
 {
     public function invoke(\MCStreetguy\Crawler\Result\CrawlResult $result)
     {
-        echo 'Crawled: ' . (string)$result->getUri() . PHP_EOL;
+        echo 'Crawled: ' . (string) $result->getUri() . PHP_EOL;
     }
 }
 
@@ -38,7 +38,7 @@ $resultSet = $crawler->execute(TARGET_URI);
 
 echo PHP_EOL . '----------------------------' . PHP_EOL;
 foreach ($resultSet as $result) {
-    echo (string)$result->getUri() . ': ';
+    echo (string) $result->getUri() . ': ';
     if ($result->success()) {
         echo 'success, ';
         echo count($result->getLinks()) . ' links found';
