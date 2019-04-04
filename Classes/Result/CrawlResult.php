@@ -119,6 +119,18 @@ class CrawlResult
     }
 
     /**
+     * Get the transfer statistics of the sent request if available.
+     *
+     * Get the transfer statistics of the sent request if available.
+     *
+     * @return TransferStats|null
+     */
+    public function getStatistics()
+    {
+        return $this->stats;
+    }
+
+    /**
      * Check if the bound request was successful.
      *
      * Check if the bound request was successful.
