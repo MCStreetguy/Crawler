@@ -160,10 +160,9 @@ class ResultSet implements \Iterator
      */
     public function toNodeTree(): NodeInterface
     {
-        $contents = clone $this->contents;
         $rootResult = null;
 
-        foreach ($contents as $elem) {
+        foreach ($this->contents as $elem) {
             if ($elem->getUri() === $this->baseUri) {
                 $rootResult = $elem;
                 break;

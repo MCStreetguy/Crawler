@@ -15,6 +15,7 @@ namespace MCStreetguy\Crawler\Result;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Ramsey\Uuid\Uuid;
+use GuzzleHttp\TransferStats;
 
 /**
  * Represents a crawl result.
@@ -42,6 +43,9 @@ class CrawlResult
     /** @var UriInterface[] The links found within this results response */
     protected $links;
 
+    /** @var TransferStats|null The transfer statistics of the sent request or null if not available */
+    protected $stats;
+
     /**
      * Constructs a new instance.
      *
@@ -55,11 +59,13 @@ class CrawlResult
     public function __construct(
         UriInterface $uri,
         ResponseInterface $response,
-        array $links = []
+        array $links = [],
+        TransferStats $stats = null
     ) {
         $this->uri = $uri;
         $this->response = $response;
         $this->links = $links;
+        $this->stats = $stats;
 
         $this->identifier = Uuid::uuid5(self::NS, (string) $uri);
     }

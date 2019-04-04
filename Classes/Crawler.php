@@ -29,6 +29,7 @@ use MCStreetguy\Crawler\Stream\NullStream;
 use Psr\Http\Message\UriInterface;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
+use GuzzleHttp\TransferStats;
 
 /**
  * The main class of the web-crawler.
@@ -163,13 +164,19 @@ class Crawler
 
         do {
             try {
+                $statistics = null;
                 $shadow = $this->client->head($current);
 
                 if ($shadow->getHeader('Content-Length')['value'] > $this->configuration->getMaximumResponseSize()) {
                     $response = $shadow->withBody(new NullStream);
                     $furtherLinks = [];
                 } else {
-                    $response = $this->client->get($current);
+                    $response = $this->client->get($current, [
+                        'on_stats' => function (TransferStats $stats) use (&$statistics) {
+                            $statistics = $stats;
+                        },
+                    ]);
+
                     $furtherLinks = $this->seeker->browse($current, $response);
 
                     $this->queue->addAll($furtherLinks);
@@ -182,7 +189,7 @@ class Crawler
                 );
             }
 
-            $results[] = $result = new CrawlResult($current, $response, $furtherLinks);
+            $results[] = $result = new CrawlResult($current, $response, $furtherLinks, $statistics);
 
             foreach ($this->processors as $processor) {
                 $processor->invoke($result);
