@@ -12,11 +12,8 @@
 
 namespace MCStreetguy\Crawler\Result;
 
-use Tree\Node\Node;
-use Tree\Node\NodeInterface;
 use Webmozart\Assert\Assert;
 use Psr\Http\Message\UriInterface;
-use Tree\Builder\NodeBuilder;
 
 /**
  * A set of CrawlResult objects.
@@ -168,34 +165,6 @@ class ResultSet implements \Iterator
         }
 
         return null;
-    }
-
-    /**
-     * Convert this ResultSet to a Node tree structure.
-     *
-     * Convert this ResultSet to a Node tree structure.
-     *
-     * @return NodeInterface The root node of the tree
-     */
-    public function toNodeTree(): NodeInterface
-    {
-        $rootResult = null;
-
-        foreach ($this->contents as $elem) {
-            if ($elem->getUri() === $this->baseUri) {
-                $rootResult = $elem;
-                break;
-            }
-        }
-
-        if ($rootResult === null) {
-            throw new \RuntimeException('Cannot determine root node of crawl!', 1554402649187);
-        }
-
-        $rootNode = new Node((string) $rootResult->getUri());
-        $tree = new NodeBuilder($rootNode);
-
-        return $rootNode;
     }
 
     /**
