@@ -36,17 +36,23 @@ $crawler->addProcessor(new DebugProcessor);
 $crawler->addValidator(new DebugValidator(TARGET_URI));
 $resultSet = $crawler->execute(TARGET_URI);
 
-echo PHP_EOL . '----------------------------' . PHP_EOL;
-foreach ($resultSet as $result) {
-    echo (string) $result->getUri() . ': ';
-    if ($result->success()) {
-        echo 'success, ';
-        echo count($result->getLinks()) . ' links found';
-    } else {
-        echo 'failed';
-    }
-    echo PHP_EOL;
+if (in_array('--debug', $argv)) {
+    // echo PHP_EOL . '----------------------------' . PHP_EOL;
+    // foreach ($resultSet as $result) {
+    //     echo (string) $result->getUri() . ': ';
+    //     if ($result->success()) {
+    //         echo 'success, ';
+    //         echo count($result->getLinks()) . ' links found';
+    //     } else {
+    //         echo 'failed';
+    //     }
+    //     echo PHP_EOL;
+    // }
+    // echo '----------------------------' . PHP_EOL . PHP_EOL;
+    
+    \Kint::dump($resultSet);
+} else {
+    echo 'Done.' . PHP_EOL;
 }
-echo '----------------------------' . PHP_EOL . PHP_EOL;
 
 exit;

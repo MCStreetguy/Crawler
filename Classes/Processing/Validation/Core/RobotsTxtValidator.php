@@ -28,7 +28,7 @@ use GuzzleHttp\Client;
  * @package    mcstreetguy/crawler
  * @since      always
  */
-class RobotsTxtValidator extends AbstractValidator implements ValidatorInterface
+class RobotsTxtValidator extends AbstractValidator
 {
     /** @var \RobotsTxtParser */
     protected $robots;
