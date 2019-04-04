@@ -12,25 +12,23 @@
 
 namespace MCStreetguy\Crawler;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Uri;
 use MCStreetguy\Crawler\Config\CrawlConfigurationInterface;
 use MCStreetguy\Crawler\Config\DefaultCrawlConfiguration;
-use Psr\Http\Message\UriInterface;
-use MCStreetguy\Crawler\Queue\CrawlQueueInterface;
-use MCStreetguy\Crawler\Queue\CrawlQueue;
-use GuzzleHttp\Psr7\Uri;
-use Webmozart\Assert\Assert;
+use MCStreetguy\Crawler\Exceptions\CrawlerException;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
+use MCStreetguy\Crawler\Processing\Validation\Core\RobotsTxtValidator;
 use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
-use GuzzleHttp\Client;
+use MCStreetguy\Crawler\Queue\CrawlQueue;
+use MCStreetguy\Crawler\Queue\CrawlQueueInterface;
 use MCStreetguy\Crawler\Result\CrawlResult;
 use MCStreetguy\Crawler\Result\ResultSet;
-use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
 use MCStreetguy\Crawler\Stream\NullStream;
-use GuzzleHttp\Exception\RequestException;
-use MCStreetguy\Crawler\Exceptions\CrawlerException;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 use Ramsey\Uuid\Uuid;
-use MCStreetguy\Crawler\Processing\Validation\Core\RobotsTxtValidator;
+use Webmozart\Assert\Assert;
 
 /**
  * The main class of the web-crawler.
@@ -83,11 +81,11 @@ class Crawler
         if ($config === null) {
             $config = new DefaultCrawlConfiguration;
         }
-        
+
         if ($queue === null) {
             $queue = new CrawlQueue;
         }
-                
+
         if (!empty($processors)) {
             Assert::allIsInstanceOf($processors, ProcessorInterface::class);
         }
@@ -95,18 +93,18 @@ class Crawler
         if (!empty($validators)) {
             Assert::allIsInstanceOf($validators, ValidatorInterface::class);
         }
-        
+
         $this->configuration = $config;
         $this->queue = $queue;
         $this->processors = $processors;
-        
+
         $this->seeker = new Seeker($validators);
         $this->client = new Client([
             'allow_redirects' => [
                 'max' => 5,
                 'strict' => true,
                 'referer' => false,
-                'protocols' => ['http','https'],
+                'protocols' => ['http', 'https'],
                 'track_redirects' => true,
             ],
             'delay' => $this->configuration->getRequestDelay(),
@@ -115,7 +113,6 @@ class Crawler
                 'X-Crawler-Request' => (string) Uuid::uuid4(),
             ],
             'http_errors' => false,
-            'on_headers' => [$this, 'validateResponseSize'],
             // 'stream' => true,
             'synchronous' => true,
             'timeout' => $this->configuration->getRequestTimeout(),
@@ -139,7 +136,7 @@ class Crawler
     {
         if (is_string($target)) {
             $target = new Uri($target);
-        } elseif (! $target instanceof UriInterface) {
+        } elseif (!$target instanceof UriInterface) {
             $type = gettype($target);
 
             throw new \InvalidArgumentException(
@@ -166,13 +163,17 @@ class Crawler
 
         do {
             try {
-                $response = $this->client->get($current);
-                $furtherLinks = $this->seeker->browse($current, $response);
+                $shadow = $this->client->head($current);
 
-                $this->queue->addAll($furtherLinks);
-            } catch (ContentTooLargeException $e) {
-                $response = $response->withBody(new NullStream);
-                $furtherLinks = [];
+                if ($shadow->getHeader('Content-Length')['value'] > $this->configuration->getMaximumResponseSize()) {
+                    $response = $shadow->withBody(new NullStream);
+                    $furtherLinks = [];
+                } else {
+                    $response = $this->client->get($current);
+                    $furtherLinks = $this->seeker->browse($current, $response);
+
+                    $this->queue->addAll($furtherLinks);
+                }
             } catch (RequestException $e) {
                 throw new CrawlerException(
                     'Something went wrong while crawling the target!',
@@ -182,11 +183,11 @@ class Crawler
             }
 
             $results[] = $result = new CrawlResult($current, $response, $furtherLinks);
-            
+
             foreach ($this->processors as $processor) {
                 $processor->invoke($result);
             }
-            
+
             $this->queue->finish($current);
 
             if ($this->validateMaximumCrawlCount(++$crawlCount)) {
@@ -196,7 +197,7 @@ class Crawler
             $current = $this->queue->getNext();
         } while ($current !== null);
 
-        $resultSet = new ResultSet($results);
+        $resultSet = new ResultSet($this->target, $results);
 
         return $resultSet;
     }
@@ -212,24 +213,6 @@ class Crawler
     {
         $maximum = $this->configuration->getMaximumCrawlCount();
         return ($maximum > 0 && $current > $maximum);
-    }
-
-    /**
-     * Validate the given response in terms of content size.
-     *
-     * @internal
-     * @param ResponseInterface $response
-     * @return void
-     * @throws ContentTooLargeException
-     */
-    public function validateResponseSize(ResponseInterface $response)
-    {
-        $maximum = $this->configuration->getMaximumResponseSize();
-        $actual = floatval($response->getHeader('Content-Length')['value']);
-
-        if ($actual > $maximum) {
-            throw ContentTooLargeException::forSize($maximum, $actual);
-        }
     }
 
     /**
@@ -282,7 +265,7 @@ class Crawler
      *
      * @return CrawlConfigurationInterface
      */
-    public function getConfiguration() : CrawlConfigurationInterface
+    public function getConfiguration(): CrawlConfigurationInterface
     {
         return $this->configuration;
     }
@@ -303,11 +286,11 @@ class Crawler
      *
      * @return CrawlQueueInterface
      */
-    public function getCrawlQueue() : CrawlQueueInterface
+    public function getCrawlQueue(): CrawlQueueInterface
     {
         return $this->queue;
     }
-    
+
     /**
      * Set the crawl queue to use.
      *

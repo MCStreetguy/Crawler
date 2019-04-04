@@ -12,10 +12,10 @@
 
 namespace MCStreetguy\Crawler\Result;
 
-use Webmozart\Assert\Assert;
-use Tree\Builder\NodeBuilder;
-use Tree\Node\NodeInterface;
 use Tree\Node\Node;
+use Tree\Node\NodeInterface;
+use Webmozart\Assert\Assert;
+use Psr\Http\Message\UriInterface;
 
 /**
  * A set of CrawlResult objects.
@@ -29,6 +29,9 @@ use Tree\Node\Node;
  */
 class ResultSet implements \Iterator
 {
+    /** @var UriInterface The base uri of the related crawl */
+    protected $baseUri;
+
     /** @var CrawlResult[] The CrawlResult objects associated with this ResultSet */
     protected $contents;
 
@@ -53,14 +56,27 @@ class ResultSet implements \Iterator
      * @param CrawlResult[] The crawl results of this set
      * @return void
      */
-    public function __construct($contents = [])
+    public function __construct(UriInterface $baseUri, $contents = [])
     {
         Assert::isArray($contents);
         Assert::allNumeric(array_keys($contents));
         Assert::allIsInstanceOf($contents, CrawlResult::class);
 
+        $this->baseUri = $baseUri;
         $this->contents = $contents;
         $this->rewind();
+    }
+
+    /**
+     * Get the base uri of this ResultSet.
+     *
+     * Get the base uri of this ResultSet.
+     *
+     * @return UriInterface
+     */
+    public function getBaseUri()
+    {
+        return $this->baseUri;
     }
 
     /**
@@ -145,9 +161,18 @@ class ResultSet implements \Iterator
     public function toNodeTree(): NodeInterface
     {
         $contents = clone $this->contents;
-        $rootResult = array_filter($contents, function ($elem) {
-            return ($elem->getFoundOn() === null);
-        })[0];
+        $rootResult = null;
+
+        foreach ($contents as $elem) {
+            if ($elem->getUri() === $this->baseUri) {
+                $rootResult = $elem;
+                break;
+            }
+        }
+
+        if ($rootResult === null) {
+            throw new \RuntimeException('Cannot determine root node of crawl!', 1554402649187);
+        }
 
         $rootNode = new Node($rootResult->getUri());
         // $tree = new NodeBuilder($rootNode);

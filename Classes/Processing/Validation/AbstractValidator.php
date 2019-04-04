@@ -30,7 +30,7 @@ abstract class AbstractValidator implements ValidatorInterface
 {
     /** @var UriInterface The base uri of the crawl */
     protected $baseUri;
-    
+
     /**
      * Constructs a new instance
      *

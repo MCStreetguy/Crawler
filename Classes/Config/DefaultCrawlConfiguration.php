@@ -12,10 +12,6 @@
 
 namespace MCStreetguy\Crawler\Config;
 
-use Ramsey\Uuid\Uuid;
-use Psr\Http\Message\ResponseInterface;
-use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
-
 /**
  * The default crawl configuration class.
  *

@@ -12,8 +12,6 @@
 
 namespace MCStreetguy\Crawler\Processing;
 
-use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\ResponseInterface;
 use MCStreetguy\Crawler\Result\CrawlResult;
 
 /**

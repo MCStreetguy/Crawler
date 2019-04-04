@@ -12,9 +12,9 @@
 
 namespace MCStreetguy\Crawler\Result;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Ramsey\Uuid\Uuid;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Represents a crawl result.
@@ -71,7 +71,7 @@ class CrawlResult
      *
      * @return string
      */
-    public function getIdentifier() : string
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -83,7 +83,7 @@ class CrawlResult
      *
      * @return UriInterface
      */
-    public function getUri() : UriInterface
+    public function getUri(): UriInterface
     {
         return $this->uri;
     }
@@ -95,7 +95,7 @@ class CrawlResult
      *
      * @return ResponseInterface
      */
-    public function getResponse() : ResponseInterface
+    public function getResponse(): ResponseInterface
     {
         return $this->response;
     }

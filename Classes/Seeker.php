@@ -13,11 +13,11 @@
 
 namespace MCStreetguy\Crawler;
 
-use Psr\Http\Message\ResponseInterface;
-use PHPHtmlParser\Dom;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\UriInterface;
 use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
+use PHPHtmlParser\Dom;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 use Webmozart\Assert\Assert;
 
 /**

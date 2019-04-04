@@ -13,10 +13,10 @@
 
 namespace MCStreetguy\Crawler\Processing\Validation\Core;
 
+use GuzzleHttp\Client;
+use MCStreetguy\Crawler\Crawler;
 use MCStreetguy\Crawler\Processing\Validation\AbstractValidator;
 use Psr\Http\Message\UriInterface;
-use MCStreetguy\Crawler\Crawler;
-use GuzzleHttp\Client;
 
 /**
  * A validator class that ensures the given uri is not restricted.
@@ -55,7 +55,7 @@ class RobotsTxtValidator extends AbstractValidator
             'synchronous' => true,
             'verify' => false,
         ]);
-        
+
         $response = $httpClient->get((string) $robotsUri);
         $statusCode = $response->getStatusCode();
 
