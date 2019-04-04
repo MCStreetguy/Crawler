@@ -11,7 +11,7 @@
  * @version    SVN: $Id$
  */
 
-namespace MCStreetguy\Crawler\Miscellaneous;
+namespace MCStreetguy\Crawler\Stream;
 
 use Psr\Http\Message\StreamInterface;
 
@@ -45,7 +45,6 @@ class NullStream implements StreamInterface
      *
      * As the NullStream is a mocking object, this will always return an empty string.
      *
-     * @internal
      * @see http://php.net/manual/en/language.oop5.magic.php#object.tostring
      * @return string
      */

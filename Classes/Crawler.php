@@ -25,7 +25,7 @@ use GuzzleHttp\Client;
 use MCStreetguy\Crawler\Result\CrawlResult;
 use MCStreetguy\Crawler\Result\ResultSet;
 use MCStreetguy\Crawler\Exceptions\ContentTooLargeException;
-use MCStreetguy\Crawler\Miscellaneous\NullStream;
+use MCStreetguy\Crawler\Stream\NullStream;
 use GuzzleHttp\Exception\RequestException;
 use MCStreetguy\Crawler\Exceptions\CrawlerException;
 use Psr\Http\Message\ResponseInterface;
@@ -102,7 +102,13 @@ class Crawler
         
         $this->seeker = new Seeker($validators);
         $this->client = new Client([
-            'allow_redirects' => true,
+            'allow_redirects' => [
+                'max' => 5,
+                'strict' => true,
+                'referer' => false,
+                'protocols' => ['http','https'],
+                'track_redirects' => true,
+            ],
             'delay' => $this->configuration->getRequestDelay(),
             'headers' => [
                 'User-Agent' => self::USER_AGENT,
