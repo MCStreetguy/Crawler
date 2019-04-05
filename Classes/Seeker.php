@@ -69,8 +69,8 @@ class Seeker
             return [];
         }
 
-        $contentType = strtolower(explode(';', $response->getHeader('Content-Type')[0])[0]);
         $parserClass = self::CONTENT_TYPE_MAP['default'];
+        $contentType = strtolower(explode(';', $response->getHeader('Content-Type')[0])[0]);
 
         if ($contentType === 'text/xml' && strpos($response->getBody()->read(100), 'http://www.sitemaps.org/schemas/sitemap') !== false) {
             $parserClass = self::CONTENT_TYPE_MAP['sitemap.xml'];

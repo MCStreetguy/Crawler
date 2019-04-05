@@ -3,7 +3,6 @@ include '../vendor/autoload.php';
 
 use MCStreetguy\Crawler\Crawler;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
-use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
 use MCStreetguy\Crawler\Processing\Validation\Core\DomainWhitelistValidator;
 use GuzzleHttp\Psr7\Uri;
 
@@ -16,9 +15,9 @@ class DebugProcessor implements ProcessorInterface
 }
 
 // const TARGET_URI = 'http://example.com/';
-// const TARGET_URI = 'https://demo.mcstreetguy.de/';
+const TARGET_URI = 'https://demo.mcstreetguy.de/';
 // const TARGET_URI = 'https://www.kampf.de/';
-const TARGET_URI = 'https://demo.mcstreetguy.de/sitemap.xml';
+// const TARGET_URI = 'https://demo.mcstreetguy.de/sitemap.xml';
 
 $target = new Uri(TARGET_URI);
 
