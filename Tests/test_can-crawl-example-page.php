@@ -4,6 +4,8 @@ include '../vendor/autoload.php';
 use MCStreetguy\Crawler\Crawler;
 use MCStreetguy\Crawler\Processing\ProcessorInterface;
 use MCStreetguy\Crawler\Processing\Validation\ValidatorInterface;
+use MCStreetguy\Crawler\Processing\Validation\Core\DomainWhitelistValidator;
+use GuzzleHttp\Psr7\Uri;
 
 class DebugProcessor implements ProcessorInterface
 {
@@ -13,28 +15,17 @@ class DebugProcessor implements ProcessorInterface
     }
 }
 
-class DebugValidator implements ValidatorInterface
-{
-    protected $baseUri;
-
-    public function __construct(string $baseUri)
-    {
-        $this->baseUri = $baseUri;
-    }
-
-    public function isValid(\Psr\Http\Message\UriInterface $target)
-    {
-        return (substr_compare((string) $target, $this->baseUri, 0, strlen($this->baseUri)) === 0);
-    }
-}
-
 // const TARGET_URI = 'http://example.com/';
-const TARGET_URI = 'https://demo.mcstreetguy.de/';
+// const TARGET_URI = 'https://demo.mcstreetguy.de/';
+// const TARGET_URI = 'https://www.kampf.de/';
+const TARGET_URI = 'https://demo.mcstreetguy.de/sitemap.xml';
+
+$target = new Uri(TARGET_URI);
 
 $crawler = new Crawler();
 $crawler->addProcessor(new DebugProcessor);
-$crawler->addValidator(new DebugValidator(TARGET_URI));
-$resultSet = $crawler->execute(TARGET_URI);
+$crawler->addValidator(new DomainWhitelistValidator($target));
+$resultSet = $crawler->execute($target);
 
 if (in_array('--debug', $argv)) {
     // echo PHP_EOL . '----------------------------' . PHP_EOL;

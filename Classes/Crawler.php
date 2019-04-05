@@ -179,7 +179,6 @@ class Crawler
                     ]);
 
                     $furtherLinks = $this->seeker->browse($current, $response);
-
                     $this->queue->addAll($furtherLinks);
                 }
             } catch (RequestException $e) {
@@ -198,7 +197,7 @@ class Crawler
 
             $this->queue->finish($current);
 
-            if ($this->validateMaximumCrawlCount(++$crawlCount)) {
+            if (!$this->validateMaximumCrawlCount(++$crawlCount)) {
                 break;
             }
 
@@ -220,7 +219,7 @@ class Crawler
     protected function validateMaximumCrawlCount(int $current)
     {
         $maximum = $this->configuration->getMaximumCrawlCount();
-        return ($maximum > 0 && $current > $maximum);
+        return !($maximum > 0 && $current > $maximum);
     }
 
     /**

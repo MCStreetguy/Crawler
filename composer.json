@@ -16,8 +16,7 @@
     },
     "require-dev": {
         "kint-php/kint": "^3.2",
-        "phpdocumentor/phpdocumentor": "^2.9",
-        "mcstreetguy/phpdoc-markdown-public": "dev-master"
+        "phpdocumentor/phpdocumentor": "^2.9"
     },
     "suggest": {
         "ext-curl": "For improved network requests, replaces stream handler usage."
@@ -26,7 +25,6 @@
         {
             "name": "Maximilian Schmidt",
             "email": "maximilianschmidt404@gmail.com",
-            "homepage": "https://www.mcstreetguy.de/",
             "role": "Lead-Developer"
         }
     ],

@@ -19,6 +19,10 @@ use PHPHtmlParser\Dom;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Webmozart\Assert\Assert;
+use MCStreetguy\Crawler\Parser\HtmlParser;
+use MCStreetguy\Crawler\Parser\GenericParser;
+use MCStreetguy\Crawler\Parser\ParserInterface;
+use MCStreetguy\Crawler\Parser\SitemapParser;
 
 /**
  * The seeker class is responsible for searching links within response bodies.
@@ -32,6 +36,12 @@ use Webmozart\Assert\Assert;
  */
 class Seeker
 {
+    const CONTENT_TYPE_MAP = [
+        'text/html' => HtmlParser::class,
+        'sitemap.xml' => SitemapParser::class,
+        'default' => GenericParser::class,
+    ];
+    
     /** @var ValidatorInterface[] The registered validators */
     protected $validators;
 
@@ -48,53 +58,41 @@ class Seeker
      * Browse the given input for further links.
      *
      * @param UriInterface $uri The uri belonging to the given response
-     * @param string|ResponseInterface $input The input to search through
+     * @param ResponseInterface $response The input to search through
      * @return UriInterface[]
-     * @throws \InvalidArgumentException
      */
-    public function browse(UriInterface $uri, $input, bool $ignoreValidation = false)
+    public function browse(UriInterface $uri, ResponseInterface $response)
     {
-        if ($input instanceof ResponseInterface) {
-            $body = $input->getBody();
+        $body = $response->getBody();
 
-            if ($body->getSize() <= 0) {
-                return [];
-            }
-
-            $input = (string) $body;
-        } elseif (!is_string($input)) {
-            $type = gettype($input);
-
-            throw new \InvalidArgumentException(
-                "\$input has to be a string or an instance of ResponseInterface, $type given!",
-                1553768650569
-            );
+        if ($body->getSize() <= 0) {
+            return [];
         }
 
-        $document = (new Dom)->loadStr($input);
+        $contentType = strtolower(explode(';', $response->getHeader('Content-Type')[0])[0]);
+        $parserClass = self::CONTENT_TYPE_MAP['default'];
+
+        if ($contentType === 'text/xml' && strpos($response->getBody()->read(100), 'http://www.sitemaps.org/schemas/sitemap') !== false) {
+            $parserClass = self::CONTENT_TYPE_MAP['sitemap.xml'];
+        } elseif (array_key_exists($contentType, self::CONTENT_TYPE_MAP)) {
+            $parserClass = self::CONTENT_TYPE_MAP[$contentType];
+        }
+
+        Assert::implementsInterface($parserClass, ParserInterface::class);
+
         $links = [];
 
-        foreach ($document->find('[href]') as $node) {
-            $tag = $node->getTag();
-
-            if (!$tag->hasAttribute('href')) {
-                continue;
-            }
-
-            $href = $tag->getAttribute('href')['value'];
-            $link = new Uri($href);
-
-            if (!Uri::isAbsolute($link)) {
-                $link = Uri::resolve($uri, $link);
-            }
-
+        foreach (call_user_func_array([$parserClass, 'invoke'], [$uri, $response]) as $link) {
             $isValid = true;
 
             foreach ($this->validators as $validator) {
-                $isValid = $isValid && $validator->isValid($link);
+                if (!$validator->isValid($link)) {
+                    $isValid = false;
+                    break;
+                }
             }
 
-            if ($isValid || $ignoreValidation) {
+            if ($isValid) {
                 $links[] = $link;
             }
         }

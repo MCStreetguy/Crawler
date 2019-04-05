@@ -67,7 +67,7 @@ class CrawlResult
         $this->links = $links;
         $this->stats = $stats;
 
-        $this->identifier = Uuid::uuid5(self::NS, (string) $uri);
+        $this->identifier = (string) Uuid::uuid5(self::NS, (string) $uri);
     }
 
     /**
