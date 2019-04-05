@@ -27,22 +27,8 @@ $crawler->addValidator(new DomainWhitelistValidator($target));
 $resultSet = $crawler->execute($target);
 
 if (in_array('--debug', $argv)) {
-    // echo PHP_EOL . '----------------------------' . PHP_EOL;
-    // foreach ($resultSet as $result) {
-    //     echo (string) $result->getUri() . ': ';
-    //     if ($result->success()) {
-    //         echo 'success, ';
-    //         echo count($result->getLinks()) . ' links found';
-    //     } else {
-    //         echo 'failed';
-    //     }
-    //     echo PHP_EOL;
-    // }
-    // echo '----------------------------' . PHP_EOL . PHP_EOL;
-    
     \Kint::dump($resultSet);
-} else {
-    echo 'Done.' . PHP_EOL;
 }
 
+echo 'Done.' . PHP_EOL;
 exit;
